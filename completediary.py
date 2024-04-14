@@ -1,3 +1,4 @@
+'''
 import database
 import json
 from openai import OpenAI
@@ -45,6 +46,13 @@ def get_diary_completion():
     
     위의 예시처럼, 유저가 제공한 정보를 바탕으로 일기를 작성해주세요.
     추가로, 다른 추가적인 말은 덧붙여 제공하지 말고 완성된 다이어리 내용만 답변으로 제공해주세요.
+    
+    그리고 해당 일기의 제목을 10자 내로 작성하여 Json 형태로 반환해주세요.
+    Json 형태는 다음과 같습니다.
+    {
+        "title": "제목",
+        "diary": "완성된 다이어리의 내용"
+        }
 
     """ % (diary_info['When'], diary_info['Where'], diary_info['with_whom'], diary_info['what'], diary_info['feelings'])
 
@@ -65,3 +73,4 @@ def get_diary_completion():
 
 
 database.insert_diary_to_db('diary', get_diary_completion())
+    '''
