@@ -188,5 +188,19 @@ def insert_diary_to_db(where, values, member_id):
 
 
 
+@app.route('/api/ai/diary/summary', methods=['GET'])
+def get_diary_summary():
+    token = request.headers.get('Authorization')
+
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT feeling FROM diary WHERE member_id = %s AND "
+            cursor.execute(query, token)
+            result = cursor.fetchall()
+        return result
+    finally:
+        conn.close()
+
+
 if __name__ == '__main__':
     app.run()
