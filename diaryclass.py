@@ -1,19 +1,18 @@
 import enum as Enum
 import datetime
-import database
 import json
 from openai import OpenAI
 import os
 import prompt as Prompt
 
 class diary:
-    class Feeling(Enum):
+    '''class Feeling(Enum):
         HAPPY = 1
         SAD = 2
         ANGRY = 3
         WORRY = 4
         SURPRISED = 5
-        RELAXED = 6
+        RELAXED = 6'''
     class metadata:
         def __init__(self, member_id, created_at, updated_at, diarytype):
             self.member_id = member_id
@@ -74,13 +73,20 @@ class diary:
             max_tokens=500
         )
 
-        self.title = self.content.split('\n')[0].split(':')[1].strip()
-        self.content = self.content.split('\n', 1)[1].strip()
+        content = completion.choices[0].message.content
+        lines = content.split('\n')
+
+        # 첫 번째 줄을 title로, 나머지를 diary로 설정
+        title = lines[0]
+        diary = '\n'.join(lines[1:])
+
+        self.content = diary
+        self.title = title
         self.updated_at = datetime.datetime.now().isoformat()
 
 
     def is_feeling_empty(self):
-        if self.get_diary_data("feeling") == "":
+        if self.get_diary_data("feeling") == None:
             return False
         else:
             return True
