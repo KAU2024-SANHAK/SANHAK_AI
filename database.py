@@ -25,7 +25,6 @@ def get_api_diary_create():
     data = request.json
     token = request.headers.get('Authorization')
 
-
     new_diary = diary(
         diary_content = diary.diary_content(
             feeling = data['feeling'],
@@ -43,21 +42,22 @@ def get_api_diary_create():
     )
 
     new_diary.get_diary_completion()
-    try:
-        with conn.cursor() as cursor:
-            query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            cursor.execute(query, (new_diary.get_diary_data("title"),new_diary.get_diary_data("content"), token))
-        conn.commit()
-        with conn.cursor() as cursor:
-            query = "SELECT diary_id FROM diary WHERE member_id = %s AND title = %s"
-            cursor.execute(query, (token, new_diary.get_diary_data("title")))
-            result = cursor.fetchone()
+    insert_diary_to_db("content", new_diary.get_diary_data("content"), token)
+    insert_diary_to_db("title", new_diary.get_diary_data("title"), token)
 
-    finally:
-        conn.close()
+    def find_diary_id():
+        try:
+            with conn.cursor() as cursor:
+                query = "SELECT diary_id FROM diary WHERE member_id = %s AND title = %s"
+                cursor.execute(query, )
+                result = cursor.fetchone()
+            return result
+        finally:
+            conn.close()
+            return 0
 
+    diary_id = find_diary_id()
 
-    diary_id = result
 
     return jsonify({
         "status": 201,
@@ -75,69 +75,73 @@ def get_diary_feelings():
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
-    try:
-        with conn.cursor() as cursor:
-            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
-            diary_content = cursor.fetchone()
+    diary_content = get_data_from_db("content", token, dairy_id)
 
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None
-        )
+    new_diary = diary(
+        diary_content = None,
+        metadata=None,
+        content=diary_content,
+        title=None,
+        spicy_advice=None,
+        soft_advice=None
+    )
 
-        new_diary.get_diary_feeling()
+    def insert_feeling_to_db(feeling):
+        try:
+            with conn.cursor() as cursor:
+                query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
+                cursor.execute(query, (feeling, token, dairy_id))
+            conn.commit()
+        finally:
+            conn.close()
+            return 0
 
-        with conn.cursor() as cursor:
-            query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (new_diary.get_diary_data("feeling"), token, dairy_id))
-        conn.commit()
-    finally:
-        conn.close()
+    new_diary.get_diary_feeling()
+    insert_feeling_to_db(new_diary.get_diary_data("feeling"))
 
 
     return jsonify({
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "feeling1": new_diary.get_diary_data("feeling")
+            "feeling1": new_diary.get_diary_data("feeling")[0],
+            "feeling2": new_diary.get_diary_data("feeling")[1]
         }
     }), 201
 
 
 @app.route('/api/ai/advice/content', methods=['POST'])
-def get_diary_advice():
+def get_diary_davice():
     data = request.json
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
+    diary_content = get_data_from_db("content", token, dairy_id)
+
+    new_diary = diary(
+        diary_content = None,
+        metadata=None,
+        content=diary_content,
+        title=None,
+        spicy_advice=None,
+        soft_advice=None
+    )
+
+    new_diary.get_diary_advice()
+
+    def insert_advice_to_db(kind, spicy):
+        try:
+            with conn.cursor() as cursor:
+                query = "INSERT INTO advice (kind_advice, spicy_advice)"
+                cursor.execute(query, (kind, spicy))
+            conn.commit()
+        finally:
+            conn.close()
+            return 0
+
+    insert_advice_to_db(new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice"))
+
     try:
-        with conn.cursor() as cursor:
-            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
-        diary_content = cursor.fetchone()
-
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None
-        )
-
-        new_diary.get_diary_advice()
-
-        with conn.cursor() as cursor:
-            query = "INSERT INTO advice (kind_advice, spicy_advice)"
-            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
-        conn.commit()
-
-
         with conn.cursor() as cursor:
             query = "SELECT id FROM advice WHERE kind_advice = %s AND spicy_advice = %s"
             cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
@@ -161,19 +165,27 @@ def get_diary_advice():
     }), 201
 
 
-@app.route('/api/ai/diary/summary', methods=['GET'])
-def get_diary_summary():
-    token = request.headers.get('Authorization')
 
-
+def get_data_from_db(what, member_id, diary_id):
     try:
         with conn.cursor() as cursor:
-            query = "SELECT feeling FROM diary WHERE member_id = %s AND "
-            cursor.execute(query, token)
+            query = "SELECT %s FROM diary WHERE member_id = %s AND diary_id = %s"
+            cursor.execute(query, (what, member_id, diary_id))
             result = cursor.fetchall()
         return result
     finally:
         conn.close()
+
+
+def insert_diary_to_db(where, values, member_id):
+    try:
+        with conn.cursor() as cursor:
+            query = "UPDATE diary SET %s = %s WHERE member_id = %s"
+            cursor.execute(query, (where, values, member_id))
+        conn.commit()
+    except Exception as e:
+        print(e)
+
 
 
 if __name__ == '__main__':
