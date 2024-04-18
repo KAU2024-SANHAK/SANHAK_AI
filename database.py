@@ -22,13 +22,8 @@ conn = pymysql.connect(**mysql_params)
 
 @app.route('/diary', methods=['GET'])
 def get_api_diary_create():
-    data = {"feeling": "HAPPY", "when": "오늘 체력단련 시간에",
-            "where": "학군단 체력단련실에서", "who": "선배들과 동기들과 함께"
-            , "what": "4키로 사이클과 3키로 러닝, 레그프레스 최대 무게, 스쿼트를 내 한계가 도달할 때 까지 했다"
-            , "realized": "한계를 느낄 때까지 했다, 다들 살이 빠졌다고 해서 뿌듯했고, 선배님께서 포기하지 않고 따라오는 자세에"
-                          "정말 멋지다고 해주셨다. 매번 한계를 넘어서는 장교가 되겠다는 내 목표에 한걸음 더 다가간 것 같다"}
-            #request.json
-    token = 2#request.headers.get('Authorization')
+    data = request.json
+    token = request.headers.get('Authorization')
 
 
     new_diary = diary(
@@ -72,7 +67,6 @@ def get_api_diary_create():
             "diaryContent" : new_diary.get_diary_data("content")
         }
     }), 201
-
 
 
 @app.route('/api/ai/diary/feelings', methods=['POST'])
@@ -167,11 +161,10 @@ def get_diary_advice():
     }), 201
 
 
-
-
 @app.route('/api/ai/diary/summary', methods=['GET'])
 def get_diary_summary():
     token = request.headers.get('Authorization')
+
 
     try:
         with conn.cursor() as cursor:
