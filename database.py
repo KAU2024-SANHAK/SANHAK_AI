@@ -107,7 +107,7 @@ def get_diary_feelings():
 
 
 @app.route('/api/ai/advice/content', methods=['POST'])
-def get_diary_davice():
+def get_diary_advice():
     data = request.json
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
@@ -157,6 +157,45 @@ def get_diary_davice():
     }), 201
 
 
+@app.route('/api/ai/diary/summary', methods=['GET'])
+def get_diary_summary():
+    token = request.headers.get('Authorization')
+    date = request.args.get('date')
+
+    try:
+        with conn.cursor() as cursor:
+            ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
+            query = "SELECT feeling FROM diary WHERE member_id = %s AND created_at >= %s AND created_at < %s"
+            cursor.execute(query, (token, date, date + datetime.timedelta(days=1)))
+            feelings = [row[0] for row in cursor.fetchall()]
+
+        feeling_count = {
+            "HAPPY": 0,
+            "SAD": 0,
+            "ANGRY": 0,
+            "WORRY": 0,
+            "SURPRISED": 0,
+            "RELAXED": 0,
+            None: 0
+        }
+        for feeling in feelings:
+            feeling_count[feeling] += 1
+
+        max_feeling = max(feeling_count, key=feeling_count.get)
+        #두번째로 많은 감정도 선택
+        feeling_count[max_feeling] = 0
+        second_max_feeling = max(feeling_count, key=feeling_count.get)
+    finally:
+        conn.close()
+
+    return jsonify({
+        "status": 200,
+        "message": "요청이 성공했습니다.",
+        "data": {
+            "firstFeeling": max_feeling,
+            "secondFeeling": second_max_feeling
+        }
+    }), 200
 
 
 
