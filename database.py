@@ -51,10 +51,20 @@ def get_api_diary_create():
             query = "SELECT diary_id FROM diary WHERE member_id = %s AND title = %s"
             cursor.execute(query, (token, new_diary.get_diary_data("title")))
             result = cursor.fetchone()
+        with conn.cursor() as cursor:
+            query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
+            cursor.execute(query, (datetime.datetime.now(), token, result))
+
+        diary_id = result
+
+        if new_diary.get_diary_data("feeling") is None:
+            get_diary_feelings()
+            with conn.cursor() as cursor:
+                query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
+                cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
+            conn.commit()
     finally:
         conn.close()
-
-    diary_id = result
 
 
     return jsonify({
