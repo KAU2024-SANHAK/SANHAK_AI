@@ -17,11 +17,10 @@ mysql_params = {
     'cursorclass': pymysql.cursors.DictCursor
 }
 
-conn = pymysql.connect(**mysql_params)
-
 
 @app.route('/diary', methods=['GET'])
 def get_api_diary_create():
+    conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
 
@@ -55,7 +54,7 @@ def get_api_diary_create():
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (datetime.datetime.now(), token, result))
 
-        diary_id = result
+        diary_id = result['diary_id']
 
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
@@ -79,6 +78,7 @@ def get_api_diary_create():
 
 @app.route('/api/ai/diary/feelings', methods=['POST'])
 def get_diary_feelings():
+    conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
@@ -88,6 +88,8 @@ def get_diary_feelings():
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (token, dairy_id))
             diary_content = cursor.fetchone()
+
+            diary_content = diary_content['content']
 
         new_diary = diary(
             diary_content = None,
@@ -111,13 +113,14 @@ def get_diary_feelings():
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "feeling1": new_diary.get_diary_data("feeling")
+            "feeling": new_diary.get_diary_data("feeling")
         }
     }), 201
 
 
 @app.route('/api/ai/advice/content', methods=['POST'])
 def get_diary_advice():
+    conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
@@ -140,16 +143,17 @@ def get_diary_advice():
         new_diary.get_diary_advice()
 
         with conn.cursor() as cursor:
-            query = "INSERT INTO advice (kind_advice, spicy_advice)"
+            query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
             cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
         conn.commit()
 
         with conn.cursor() as cursor:
             query = "SELECT id FROM advice WHERE kind_advice = %s AND spicy_advice = %s"
             cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
-            adviceId = cursor.fetchone()
+            adviceid = cursor.fetchone()
+            adviceid = adviceid['id']
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (adviceId, token, dairy_id))
+            cursor.execute(query, (adviceid, token, dairy_id))
         conn.commit()
     finally:
         conn.close()
@@ -158,7 +162,7 @@ def get_diary_advice():
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "adviceId": adviceId,
+            "adviceId": adviceid,
             "advice": {
                 "spicy": new_diary.get_diary_data("spicy_advice"),
                 "kind": new_diary.get_diary_data("soft_advice")
@@ -169,6 +173,7 @@ def get_diary_advice():
 
 @app.route('/api/ai/diary/summary', methods=['GET'])
 def get_diary_summary():
+    conn = pymysql.connect(**mysql_params)
     token = request.headers.get('Authorization')
     date = request.args.get('date')
 

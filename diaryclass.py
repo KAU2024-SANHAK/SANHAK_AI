@@ -117,8 +117,8 @@ class diary:
         )
 
         content = completion.choices[0].message.content
-        parts = content.split('"\n\nF advice"')
+        content = json.loads(content)
 
-        self.spicy_advice = parts[0].split(' : "', 1)[1].strip()
-        self.soft_advice = parts[1][3:].strip()
+        self.spicy_advice = content['T comment']
+        self.soft_advice = content['F comment']
 
