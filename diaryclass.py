@@ -101,10 +101,8 @@ class diary:
             ]
         )
 
-#나온 두개의 감정을 리스트 형식으로 저장
-        # 문자열을 줄바꿈('\n')을 기준으로 분리하고, 각 줄을 strip() 메서드를 사용하여 공백을 제거한 후 리스트에 저장합니다.
-        self.feeling = [line.strip() for line in completion.choices[0].message.content.split('\n') if
-                        line.strip() != '']
+        content = completion.choices[0].message.content
+        self.feeling = content
 
     def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % self.get_diary_data("content"))
