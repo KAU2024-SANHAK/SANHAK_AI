@@ -6,13 +6,10 @@ import os
 import prompt as Prompt
 
 class diary:
-    '''class Feeling(Enum):
-        HAPPY = 1
-        SAD = 2
-        ANGRY = 3
-        WORRY = 4
-        SURPRISED = 5
-        RELAXED = 6'''
+    def change_feeling(self, feeling):
+        feelings = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED", "평온": "RELAXED"}.get(feeling, None)
+        return feelings
+
     class metadata:
         def __init__(self, member_id, created_at, updated_at, diarytype):
             self.member_id = member_id
@@ -102,7 +99,7 @@ class diary:
         )
 
         content = completion.choices[0].message.content
-        self.feeling = content
+        self.feeling = self.change_feeling(content)
 
     def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % self.get_diary_data("content"))
