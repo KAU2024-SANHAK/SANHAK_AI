@@ -45,16 +45,11 @@ def get_api_diary_create():
         with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
             cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
+            diary_id = cursor.lastrowid
         conn.commit()
         with conn.cursor() as cursor:
-            query = "SELECT diary_id FROM diary WHERE member_id = %s AND title = %s"
-            cursor.execute(query, (token, new_diary.get_diary_data("title")))
-            result = cursor.fetchone()
-        with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (datetime.datetime.now(), token, result))
-
-        diary_id = result['diary_id']
+            cursor.execute(query, (datetime.datetime.now(), token, diary_id))
 
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
@@ -145,13 +140,7 @@ def get_diary_advice():
         with conn.cursor() as cursor:
             query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
             cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
-        conn.commit()
-
-        with conn.cursor() as cursor:
-            query = "SELECT id FROM advice WHERE kind_advice = %s AND spicy_advice = %s"
-            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
-            adviceid = cursor.fetchone()
-            adviceid = adviceid['id']
+            adviceid = cursor.lastrowid
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (adviceid, token, dairy_id))
         conn.commit()
@@ -211,8 +200,6 @@ def get_diary_summary():
             "secondFeeling": second_max_feeling
         }
     }), 200
-
-
 
 
 if __name__ == '__main__':
