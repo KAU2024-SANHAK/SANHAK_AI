@@ -4,9 +4,12 @@ import datetime
 from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True, origins=('http://localhost:5137', 'https://honeyary.vercel.app/'))
+
 
 mysql_params = {
     'host': 'kkoolbee-database.cvimcwwiengv.ap-northeast-2.rds.amazonaws.com',
@@ -19,7 +22,7 @@ mysql_params = {
 }
 
 
-@app.route('/diary', methods=['GET'])
+@app.route('/api/ai/diary/create', methods=['GET'])
 def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
     data = request.json
