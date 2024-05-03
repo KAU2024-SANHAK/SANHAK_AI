@@ -3,6 +3,7 @@ import pymysql.cursors
 import datetime
 from flask import Flask, request, jsonify
 from diaryclass import diary
+from collections import defaultdict
 
 
 app = Flask(__name__)
@@ -169,9 +170,10 @@ def get_diary_summary():
     try:
         with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
-            query = "SELECT feeling FROM diary WHERE member_id = %s AND created_at >= %s AND created_at < %s"
-            cursor.execute(query, (token, date, date + datetime.timedelta(days=1)))
-            feelings = [row[0] for row in cursor.fetchall()]
+            query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
+            cursor.execute(query, (token, date[:4], date[5:7]))
+            result = cursor.fetchall()
+            feelings = [row['feeling'] for row in result]
 
         feeling_count = {
             "HAPPY": 0,
@@ -180,8 +182,10 @@ def get_diary_summary():
             "WORRY": 0,
             "SURPRISED": 0,
             "RELAXED": 0,
-            None: 0
+            "None": 0
         }
+
+        feeling_count = defaultdict(int)
         for feeling in feelings:
             feeling_count[feeling] += 1
 
