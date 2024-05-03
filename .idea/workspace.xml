@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="월별 감정 분석 성공" />
+    <list default="true" id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="추적중지" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,6 +69,7 @@
     &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/songjinhag/Library/Mobile Documents/com~apple~CloudDocs/코드/PycharmProjects/SANHAK_AI&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -168,6 +169,7 @@
       <workItem from="1714372910459" duration="14538000" />
       <workItem from="1714639823363" duration="14000" />
       <workItem from="1714639876929" duration="3932000" />
+      <workItem from="1714724923733" duration="1799000" />
     </task>
     <task id="LOCAL-00001" summary="get diary summary 틀 생성&#10;&#10;기본 작업 완료 및 새로운 브랜치로 체크아웃 하기 위해 보류">
       <option name="closed" value="true" />
@@ -257,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714640371417</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="추적중지">
+      <option name="closed" value="true" />
+      <created>1714725088891</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1714725088891</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,11 +312,12 @@
     <MESSAGE value="class 수정" />
     <MESSAGE value="refactoring" />
     <MESSAGE value="월별 감정 분석 성공" />
-    <option name="LAST_COMMIT_MESSAGE" value="월별 감정 분석 성공" />
+    <MESSAGE value="추적중지" />
+    <option name="LAST_COMMIT_MESSAGE" value="추적중지" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SANHAK_AI$diaryclass.coverage" NAME="diaryclass 커버리지 결과" MODIFIED="1713270331011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SANHAK_AI$apiTest.coverage" NAME="apiTest 커버리지 결과" MODIFIED="1713018057874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SANHAK_AI$database.coverage" NAME="database 커버리지 결과" MODIFIED="1714724600034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SANHAK_AI$database.coverage" NAME="database 커버리지 결과" MODIFIED="1714725131605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
