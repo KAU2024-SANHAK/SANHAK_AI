@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="월별 감정 분석 성공" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lifeposi&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/KAU2024-SANHAK/SANHAK_AI.git&quot;,
+    &quot;accountId&quot;: &quot;a0ca8d13-490a-4633-b2b1-725e3abe1d51&quot;
+  }
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2ecjJOBRXfPOGSqWiHk8fjWqW0m" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.apiTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.database.executor&quot;: &quot;Run&quot;,
+    &quot;Python.diaryclass.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/songjinhag/Library/Mobile Documents/com~apple~CloudDocs/코드/PycharmProjects/SANHAK_AI&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;
+    ],
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora_aws&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="database" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SANHAK_AI" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.database" />
+        <item itemvalue="Python.database" />
+        <item itemvalue="Python.database" />
+        <item itemvalue="Python.database" />
+        <item itemvalue="Python.database" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PY-241.14494.241" />
+        <option value="bundled-python-sdk-0509580d9d50-28c9f5db9ffe-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.14494.241" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="" />
+      <created>1712210687233</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712210687233</updated>
+      <workItem from="1712210688268" duration="6984000" />
+      <workItem from="1712381403939" duration="96000" />
+      <workItem from="1712563093296" duration="7458000" />
+      <workItem from="1712573698630" duration="446000" />
+      <workItem from="1712574159707" duration="529000" />
+      <workItem from="1712574699375" duration="26395000" />
+      <workItem from="1712984656348" duration="5322000" />
+      <workItem from="1712993221409" duration="13831000" />
+      <workItem from="1713017509801" duration="628000" />
+      <workItem from="1713090367578" duration="2798000" />
+      <workItem from="1713103638064" duration="40000" />
+      <workItem from="1713103680173" duration="29000" />
+      <workItem from="1713103710880" duration="68000" />
+      <workItem from="1713103780722" duration="425000" />
+      <workItem from="1713104208393" duration="128000" />
+      <workItem from="1713104338074" duration="2310000" />
+      <workItem from="1713156470555" duration="4817000" />
+      <workItem from="1713233900148" duration="153000" />
+      <workItem from="1713234055002" duration="306000" />
+      <workItem from="1713234375431" duration="28484000" />
+      <workItem from="1713440176070" duration="8387000" />
+      <workItem from="1713611844952" duration="752000" />
+      <workItem from="1713612599944" duration="6000" />
+      <workItem from="1713612619357" duration="6829000" />
+      <workItem from="1713677008330" duration="1605000" />
+      <workItem from="1713678617084" duration="6526000" />
+      <workItem from="1713769640717" duration="17000" />
+      <workItem from="1713769677967" duration="12765000" />
+      <workItem from="1714372910459" duration="14538000" />
+      <workItem from="1714639823363" duration="14000" />
+      <workItem from="1714639876929" duration="3932000" />
+    </task>
+    <task id="LOCAL-00001" summary="get diary summary 틀 생성&#10;&#10;기본 작업 완료 및 새로운 브랜치로 체크아웃 하기 위해 보류">
+      <option name="closed" value="true" />
+      <created>1713233869172</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713233869172</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feeling logic 수정&#10;&#10;feeling관련 api 로직을 수정">
+      <option name="closed" value="true" />
+      <created>1713408723996</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713408723996</updated>
+    </task>
+    <task id="LOCAL-00003" summary="request 작성">
+      <option name="closed" value="true" />
+      <created>1713416745871</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713416745872</updated>
+    </task>
+    <task id="LOCAL-00004" summary="rebase 잘못해서 수정">
+      <option name="closed" value="true" />
+      <created>1713417558702</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1713417558702</updated>
+    </task>
+    <task id="LOCAL-00005" summary="rebase 잘못해서 수정">
+      <option name="closed" value="true" />
+      <created>1713422929227</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1713422929227</updated>
+    </task>
+    <task id="LOCAL-00006" summary="diary summary 생성&#10;&#10;# 이후에 query 부분 수정해야함">
+      <option name="closed" value="true" />
+      <created>1713604423325</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1713604423325</updated>
+    </task>
+    <task id="LOCAL-00007" summary="writed_at 기능추가&#10;&#10;writed_at 업로드를 안해주었던 기능을 수정함">
+      <option name="closed" value="true" />
+      <created>1713606218554</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1713606218554</updated>
+    </task>
+    <task id="LOCAL-00008" summary="query 및 class 수정">
+      <option name="closed" value="true" />
+      <created>1713678279015</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1713678279015</updated>
+    </task>
+    <task id="LOCAL-00009" summary="class 수정">
+      <option name="closed" value="true" />
+      <created>1713678468488</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1713678468488</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactoring">
+      <option name="closed" value="true" />
+      <created>1714394008383</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1714394008383</updated>
+    </task>
+    <task id="LOCAL-00011" summary="월별 감정 분석 성공">
+      <option name="closed" value="true" />
+      <created>1714640371417</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1714640371417</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="get diary summary 틀 생성&#10;&#10;기본 작업 완료 및 새로운 브랜치로 체크아웃 하기 위해 보류" />
+    <MESSAGE value="feeling logic 수정&#10;&#10;feeling관련 api 로직을 수정" />
+    <MESSAGE value="request 작성" />
+    <MESSAGE value="rebase 잘못해서 수정" />
+    <MESSAGE value="diary summary 생성&#10;&#10;# 이후에 query 부분 수정해야함" />
+    <MESSAGE value="writed_at 기능추가&#10;&#10;writed_at 업로드를 안해주었던 기능을 수정함" />
+    <MESSAGE value="query 및 class 수정" />
+    <MESSAGE value="class 수정" />
+    <MESSAGE value="refactoring" />
+    <MESSAGE value="월별 감정 분석 성공" />
+    <option name="LAST_COMMIT_MESSAGE" value="월별 감정 분석 성공" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/SANHAK_AI$diaryclass.coverage" NAME="diaryclass 커버리지 결과" MODIFIED="1713270331011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SANHAK_AI$apiTest.coverage" NAME="apiTest 커버리지 결과" MODIFIED="1713018057874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SANHAK_AI$database.coverage" NAME="database 커버리지 결과" MODIFIED="1714724600034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
