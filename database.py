@@ -6,7 +6,7 @@ from diaryclass import diary
 from collections import defaultdict
 from flask_cors import CORS
 from fastapi import FastAPI, HTTPException
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 
@@ -223,4 +223,4 @@ def get_diary_summary():
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="127.0.0.1", port=5173)
+    uvicorn.run(app, host="localhost", port=5173)
