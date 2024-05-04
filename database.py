@@ -4,7 +4,6 @@ import datetime
 from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
-from flask_cors import CORS
 from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
@@ -15,13 +14,15 @@ app = FastAPI()
 origins = [
     "http://localhost:5173/",
     'https://honeyary.vercel.app/',
+    "https://www.honeyary-ai.o-r.kr/",
+    "http://localhost:8080",
     "*"
 ]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
