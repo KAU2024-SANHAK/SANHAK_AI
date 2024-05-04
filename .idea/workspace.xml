@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="추적중지">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="9c6d255f-c713-4461-a37e-9f98389f8b28" name="변경" comment="api update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -315,11 +313,12 @@
     <MESSAGE value="refactoring" />
     <MESSAGE value="월별 감정 분석 성공" />
     <MESSAGE value="추적중지" />
-    <option name="LAST_COMMIT_MESSAGE" value="추적중지" />
+    <MESSAGE value="api update" />
+    <option name="LAST_COMMIT_MESSAGE" value="api update" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SANHAK_AI$diaryclass.coverage" NAME="diaryclass 커버리지 결과" MODIFIED="1713270331011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SANHAK_AI$apiTest.coverage" NAME="apiTest 커버리지 결과" MODIFIED="1713018057874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SANHAK_AI$database.coverage" NAME="database 커버리지 결과" MODIFIED="1714784338491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SANHAK_AI$database.coverage" NAME="database 커버리지 결과" MODIFIED="1714789685177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
