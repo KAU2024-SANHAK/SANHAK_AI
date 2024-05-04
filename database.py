@@ -13,8 +13,9 @@ import uvicorn
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",
-    'https://honeyary.vercel.app/'
+    "http://localhost:5173/",
+    'https://honeyary.vercel.app/',
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,
