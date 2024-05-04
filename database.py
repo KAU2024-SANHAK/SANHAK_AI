@@ -12,10 +12,11 @@ import uvicorn
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",
-    "https://honeyary.vercel.app/",
+    "http://localhost:5173/",
+    'https://honeyary.vercel.app/',
     "https://www.honeyary-ai.o-r.kr/",
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -224,4 +225,5 @@ def get_diary_summary():
 
 
 if __name__ == '__main__':
-    uvicorn.run(app)
+    uvicorn.run(app, host="127.0.0.1", port=8080)
+    
