@@ -5,11 +5,24 @@ from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
 from flask_cors import CORS
+from fastapi import FastAPI, HTTPException
+from starlette.middleware.cors import CORSMiddleware
+import uvicorn
 
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=('http://localhost:5173/', 'https://honeyary.vercel.app/'))
+app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+    'https://honeyary.vercel.app/'
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 mysql_params = {
     'host': 'kkoolbee-database.cvimcwwiengv.ap-northeast-2.rds.amazonaws.com',
@@ -22,7 +35,7 @@ mysql_params = {
 }
 
 
-@app.route('/api/ai/diary/create', methods=['GET'])
+@app.get('/api/ai/diary/create')
 def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
     data = request.json
@@ -75,7 +88,7 @@ def get_api_diary_create():
     }), 201
 
 
-@app.route('/api/ai/diary/feelings', methods=['POST'])
+@app.post('/api/ai/diary/feelings')
 def get_diary_feelings():
     conn = pymysql.connect(**mysql_params)
     data = request.json
@@ -117,7 +130,7 @@ def get_diary_feelings():
     }), 201
 
 
-@app.route('/api/ai/advice/content', methods=['POST'])
+@app.post('/api/ai/advice/content')
 def get_diary_advice():
     conn = pymysql.connect(**mysql_params)
     data = request.json
@@ -164,7 +177,7 @@ def get_diary_advice():
     }), 201
 
 
-@app.route('/api/ai/diary/summary', methods=['GET'])
+@app.get('/api/ai/diary/summary')
 def get_diary_summary():
     conn = pymysql.connect(**mysql_params)
     token = request.headers.get('Authorization')
@@ -210,4 +223,4 @@ def get_diary_summary():
 
 
 if __name__ == '__main__':
-    app.run()
+    uvicorn.run(app, host="127.0.0.1", port=5173)
