@@ -36,7 +36,7 @@ mysql_params = {
 
 
 @app.get('/api/ai/diary/create')
-def get_api_diary_create():
+async def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
@@ -89,7 +89,7 @@ def get_api_diary_create():
 
 
 @app.post('/api/ai/diary/feelings')
-def get_diary_feelings():
+async def get_diary_feelings():
     conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
@@ -131,7 +131,7 @@ def get_diary_feelings():
 
 
 @app.post('/api/ai/advice/content')
-def get_diary_advice():
+async def get_diary_advice():
     conn = pymysql.connect(**mysql_params)
     data = request.json
     token = request.headers.get('Authorization')
@@ -178,7 +178,7 @@ def get_diary_advice():
 
 
 @app.get('/api/ai/diary/summary')
-def get_diary_summary():
+async def get_diary_summary():
     conn = pymysql.connect(**mysql_params)
     token = request.headers.get('Authorization')
     date = request.args.get('date')
