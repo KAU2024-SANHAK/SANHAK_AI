@@ -6,6 +6,10 @@ from collections import defaultdict
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
+import logging
+import sys
+from logger import logger
+
 
 
 app = FastAPI()
@@ -232,6 +236,14 @@ async def get_diary_summary(request: Request):
             "secondFeeling": second_max_feeling
         }
     }
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler(sys.stdout)
+log_formatter = logging.Formatter("%(asctime)s [%(processName)s: %(process)d] [%(threadName)s: %(thread)d] [%(levelname)s] %(name)s: %(message)s")
+stream_handler.setFormatter(log_formatter)
+logger.addHandler(stream_handler)
 
 
 if __name__ == '__main__':
