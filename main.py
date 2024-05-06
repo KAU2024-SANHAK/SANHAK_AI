@@ -82,15 +82,22 @@ async def get_api_diary_create(request: Request):
                 cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
             conn.commit()
 
+        # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
+        diary_id = diary_id if diary_id else "None"
+        diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else "None"
+
          # 새로운 변수를 사용하여 return 값을 설정합니다.
         return_data = {
             "status": 201,
             "message": "요청이 성공했습니다.",
             "data": {
                 "diaryId": diary_id,
-                "diaryContent" : new_diary.get_diary_data("content")
+                "diaryContent" : diary_content
             }
         }
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
