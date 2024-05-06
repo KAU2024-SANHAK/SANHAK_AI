@@ -195,20 +195,23 @@ async def get_diary_advice():
 
 
 @app.get('/api/ai/diary/summary')
-async def get_diary_summary():
+async def get_diary_summary(request: Request):
     conn = pymysql.connect(**mysql_params)
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-    date = await request.args.get('date')
+    authorization_header = request.headers.get('Authorization')
+    
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
+    if authorization_header and authorization_header.startswith('Bearer'):
+        token = authorization_header.split(' ')[1]
+
+    date = request.query_params.get("date")
 
     try:
         with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
-            cursor.execute(query, (token, date[:4], date[5:7]))
+            cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None))
             result = cursor.fetchall()
             feelings = [row['feeling'] for row in result]
-
         feeling_count = {
             "HAPPY": 0,
             "SAD": 0,
@@ -219,28 +222,25 @@ async def get_diary_summary():
             "None": 0
         }
 
-        feeling_count = defaultdict(int)
-        for feeling in feelings:
-            feeling_count[feeling] += 1
-
-        max_feeling = max(feeling_count, key=feeling_count.get)
-        #두번째로 많은 감정도 선택
-        feeling_count[max_feeling] = 0
-        second_max_feeling = max(feeling_count, key=feeling_count.get)
-    except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        # feeling_count = defaultdict(int)
+        # for feeling in feelings:
+        #     feeling_count[feeling] += 1
+        #
+        # max_feeling = max(feeling_count, key=feeling_count.get)
+        # #두번째로 많은 감정도 선택
+        # feeling_count[max_feeling] = 0
+        # second_max_feeling = max(feeling_count, key=feeling_count.get)
     finally:
         conn.close()
 
-    return jsonify({
+    return {
         "status": 200,
         "message": "요청이 성공했습니다.",
         "data": {
-            "firstFeeling": max_feeling,
-            "secondFeeling": second_max_feeling
+            "firstFeeling": 0,
+            "secondFeeling": 0
         }
-    }), 200
+    }
 
 
 if __name__ == '__main__':
