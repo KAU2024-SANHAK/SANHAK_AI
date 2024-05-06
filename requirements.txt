@@ -3,3 +3,4 @@ openai
 pymysql
 uvicorn
 fastapi
+logger

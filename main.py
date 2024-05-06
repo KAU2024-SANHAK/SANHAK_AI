@@ -46,7 +46,10 @@ mysql_params = {
 async def get_api_diary_create(request: Request):
     conn = pymysql.connect(**mysql_params)
     data = request.json()
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
+    if authorization_header and authorization_header.startswith('Bearer'):
+        token = authorization_header.split(' ')[1]
 
     new_diary = diary(
         diary_content = diary.diary_content(
@@ -99,7 +102,10 @@ async def get_api_diary_create(request: Request):
 async def get_diary_feelings(request: Request):
     conn = pymysql.connect(**mysql_params)
     data = request.json()
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
+    if authorization_header and authorization_header.startswith('Bearer'):
+        token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
     try:
@@ -144,7 +150,10 @@ async def get_diary_feelings(request: Request):
 async def get_diary_advice(request: Request):
     conn = pymysql.connect(**mysql_params)
     data = request.json()
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
+    if authorization_header and authorization_header.startswith('Bearer'):
+        token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
     try:
@@ -193,7 +202,10 @@ async def get_diary_advice(request: Request):
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
     conn = pymysql.connect(**mysql_params)
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
+    if authorization_header and authorization_header.startswith('Bearer'):
+        token = authorization_header.split(' ')[1]
     date = request.query_params.get("date")
 
     try:
