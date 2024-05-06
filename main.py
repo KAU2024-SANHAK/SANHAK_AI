@@ -34,7 +34,7 @@ mysql_params = {
 }
 
 
-@app.get('/api/ai/diary/create')
+@app.post('/api/ai/diary/create')
 async def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
     data = request.json
