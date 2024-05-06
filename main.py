@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
 from fastapi import FastAPI, HTTPException
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 
@@ -15,6 +15,7 @@ origins = [
     "http://localhost:5173",
     'https://honeyary.vercel.app',
     "http://localhost:8080",
+    "http://localhost"
     "http://0.0.0.0:8080",
     "http://127.0.0.1:8080",
     "https://www.honeyary-ai.o-r.kr",
@@ -216,6 +217,9 @@ async def get_diary_summary():
         #두번째로 많은 감정도 선택
         feeling_count[max_feeling] = 0
         second_max_feeling = max(feeling_count, key=feeling_count.get)
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
