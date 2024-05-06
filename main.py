@@ -1,4 +1,5 @@
 import json
+import traceback
 import pymysql.cursors
 import datetime
 from flask import Flask, request, jsonify
@@ -79,6 +80,9 @@ async def get_api_diary_create():
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
                 cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
             conn.commit()
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
@@ -123,6 +127,9 @@ async def get_diary_feelings():
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (new_diary.get_diary_data("feeling"), token, dairy_id))
         conn.commit()
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
@@ -168,6 +175,9 @@ async def get_diary_advice():
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (adviceid, token, dairy_id))
         conn.commit()
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
