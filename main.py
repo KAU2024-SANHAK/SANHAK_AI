@@ -5,14 +5,14 @@ from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
 
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173/",
+    "http://localhost:5173",
     'https://honeyary.vercel.app/',
     "*"
 ]
