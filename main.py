@@ -81,28 +81,24 @@ async def get_api_diary_create(request: Request):
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
                 cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
             conn.commit()
-
-        # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
+            # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
         diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else ""
 
-         # 새로운 변수를 사용하여 return 값을 설정합니다.
-        return_data = {
-            "status": 201,
-            "message": "요청이 성공했습니다.",
-            "data": {
-                "diaryId": diary_id,
-                "diaryContent" : diary_content
-            }
-        }
     except Exception as e:
         print(e)
         print(traceback.format_exc())
     finally:
         conn.close()
 
-
-    return return_data
+    return {
+            "status": 201,
+            "message": "요청이 성공했습니다.",
+            "data": {
+                "diaryId": diary_id,
+                "diaryContent" : diary_content
+            }
+    }
 
 
 @app.post('/api/ai/diary/feelings')
@@ -130,9 +126,12 @@ async def get_diary_feelings(request: Request):
         )
 
         new_diary.get_diary_feeling()
+        # feeling이 null인 경우를 처리합니다.
+        feeling = new_diary.get_diary_data("feeling") if new_diary.get_diary_data("feeling") else ""
+
         with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (new_diary.get_diary_data("feeling"), token, dairy_id))
+            cursor.execute(query, (feeling, token, dairy_id))
         conn.commit()
     except Exception as e:
         print(e)
@@ -145,7 +144,7 @@ async def get_diary_feelings(request: Request):
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "feeling": new_diary.get_diary_data("feeling")
+            "feeling": feeling
         }
     }
 
@@ -181,20 +180,25 @@ async def get_diary_advice(request: Request):
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (adviceid, token, dairy_id))
         conn.commit()
+         # adviceId, spicy, kind가 null인 경우를 처리합니다.
+        advice_id = adviceid if adviceid is not None else 0
+        spicy_advice = new_diary.get_diary_data("spicy_advice") if new_diary.get_diary_data("spicy_advice") else ""
+        soft_advice = new_diary.get_diary_data("soft_advice") if new_diary.get_diary_data("soft_advice") else ""
     except Exception as e:
         print(e)
         print(traceback.format_exc())
     finally:
         conn.close()
 
+   
     return {
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "adviceId": adviceid,
+           "adviceId": advice_id,
             "advice": {
-                "spicy": new_diary.get_diary_data("spicy_advice"),
-                "kind": new_diary.get_diary_data("soft_advice")
+                "spicy": spicy_advice,
+                "kind": soft_advice
             }
         }
     }
