@@ -1,4 +1,3 @@
-import json
 import traceback
 import pymysql.cursors
 import datetime
@@ -42,9 +41,8 @@ mysql_params = {
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create(request: Request):
     conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
+    data = request.json()
+    token = request.headers.get('Authorization')
 
     new_diary = diary(
         diary_content = diary.diary_content(
@@ -96,9 +94,8 @@ async def get_api_diary_create(request: Request):
 @app.post('/api/ai/diary/feelings')
 async def get_diary_feelings(request: Request):
     conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
+    data = request.json()
+    token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
     try:
@@ -142,9 +139,8 @@ async def get_diary_feelings(request: Request):
 @app.post('/api/ai/advice/content')
 async def get_diary_advice(request: Request):
     conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
+    data = request.json()
+    token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
     try:
@@ -193,9 +189,8 @@ async def get_diary_advice(request: Request):
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
     conn = pymysql.connect(**mysql_params)
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-    date = await request.args.get('date')
+    token = request.headers.get('Authorization')
+    date = request.query_params.get("date")
 
     try:
         with conn.cursor() as cursor:
