@@ -83,8 +83,8 @@ async def get_api_diary_create(request: Request):
             conn.commit()
 
         # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
-        diary_id = diary_id if diary_id else "None"
-        diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else "None"
+        diary_id = diary_id if diary_id is not None else 0
+        diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else ""
 
          # 새로운 변수를 사용하여 return 값을 설정합니다.
         return_data = {
