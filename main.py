@@ -13,8 +13,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    'https://honeyary.vercel.app/',
-    "*"
+    'https://honeyary.vercel.app',
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +38,8 @@ mysql_params = {
 async def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
     data = request.json
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
 
     new_diary = diary(
         diary_content = diary.diary_content(
@@ -92,7 +92,8 @@ async def get_api_diary_create():
 async def get_diary_feelings():
     conn = pymysql.connect(**mysql_params)
     data = request.json
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
     try:
@@ -134,7 +135,8 @@ async def get_diary_feelings():
 async def get_diary_advice():
     conn = pymysql.connect(**mysql_params)
     data = request.json
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
     try:
@@ -180,7 +182,8 @@ async def get_diary_advice():
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary():
     conn = pymysql.connect(**mysql_params)
-    token = request.headers.get('Authorization')
+    authorization_header = request.headers.get('Authorization')
+    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
     date = request.args.get('date')
 
     try:
