@@ -41,8 +41,8 @@ mysql_params = {
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create():
     conn = pymysql.connect(**mysql_params)
-    data = request.json
-    authorization_header = request.headers.get('Authorization')
+    data = await request.json()
+    authorization_header = await request.headers.get('Authorization')
     if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
 
     new_diary = diary(
@@ -95,8 +95,8 @@ async def get_api_diary_create():
 @app.post('/api/ai/diary/feelings')
 async def get_diary_feelings():
     conn = pymysql.connect(**mysql_params)
-    data = request.json
-    authorization_header = request.headers.get('Authorization')
+    data = await request.json()
+    authorization_header = await request.headers.get('Authorization')
     if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
@@ -138,8 +138,8 @@ async def get_diary_feelings():
 @app.post('/api/ai/advice/content')
 async def get_diary_advice():
     conn = pymysql.connect(**mysql_params)
-    data = request.json
-    authorization_header = request.headers.get('Authorization')
+    data = await request.json()
+    authorization_header = await request.headers.get('Authorization')
     if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
     dairy_id = data['diaryId']
 
@@ -186,9 +186,9 @@ async def get_diary_advice():
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary():
     conn = pymysql.connect(**mysql_params)
-    authorization_header = request.headers.get('Authorization')
+    authorization_header = await request.headers.get('Authorization')
     if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-    date = request.args.get('date')
+    date = await request.args.get('date')
 
     try:
         with conn.cursor() as cursor:
