@@ -233,8 +233,8 @@ async def get_diary_summary(request: Request):
         "status": 200,
         "message": "요청이 성공했습니다.",
         "data": {
-            "firstFeeling": max_feeling,
-            "secondFeeling": second_max_feeling
+            "firstFeeling": 0,
+            "secondFeeling": 0
         }
     }
 
