@@ -214,8 +214,12 @@ async def get_diary_summary(request: Request):
             "RELAXED": 0,
             "None": 0
         }
-
-        feeling_count = defaultdict(int)
+        if not feelings:  # 쿼리 결과가 비어 있는 경우
+            # 쿼리 결과가 비어 있는 경우, 기본값으로 처리합니다.
+            max_feeling = "None"
+            second_max_feeling = "None"
+        else:
+            feeling_count = defaultdict(int)
         for feeling in feelings:
             feeling_count[feeling] += 1
 
@@ -233,8 +237,8 @@ async def get_diary_summary(request: Request):
         "status": 200,
         "message": "요청이 성공했습니다.",
         "data": {
-            "firstFeeling": 0,
-            "secondFeeling": 0
+            "firstFeeling": max_feeling,
+            "secondFeeling": second_max_feeling
         }
     }
 
