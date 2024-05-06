@@ -11,20 +11,20 @@ import uvicorn
 
 app = FastAPI()
 
-# origins = [
-#     "http://localhost:5173",
-#     'https://honeyary.vercel.app',
-#     "http://localhost:8080",
-#     "http://0.0.0.0:8080",
-#     "http://127.0.0.1:8080",
-#     "https://www.honeyary-ai.o-r.kr",
-# ]
+origins = [
+    "http://localhost:5173",
+    'https://honeyary.vercel.app',
+    "http://localhost:8080",
+    "http://0.0.0.0:8080",
+    "http://127.0.0.1:8080",
+    "https://www.honeyary-ai.o-r.kr",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins= ["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT","PATCH", "DELETE"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 mysql_params = {
