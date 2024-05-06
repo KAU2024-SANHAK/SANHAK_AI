@@ -81,18 +81,21 @@ async def get_api_diary_create(request: Request):
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
                 cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
             conn.commit()
+
+         # 새로운 변수를 사용하여 return 값을 설정합니다.
+        return_data = {
+            "status": 201,
+            "message": "요청이 성공했습니다.",
+            "data": {
+                "diaryId": diary_id,
+                "diaryContent" : new_diary.get_diary_data("content")
+            }
+        }
     finally:
         conn.close()
 
 
-    return {
-        "status": 201,
-        "message": "요청이 성공했습니다.",
-        "data": {
-            "diaryId": diary_id,
-            "diaryContent" : new_diary.get_diary_data("content")
-        }
-    }
+    return return_data
 
 
 @app.post('/api/ai/diary/feelings')
