@@ -14,6 +14,8 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     'https://honeyary.vercel.app',
+    "http://localhost:8080",
+    "https://www.honeyary-ai.o-r.kr",
 ]
 app.add_middleware(
     CORSMiddleware,
