@@ -1,12 +1,7 @@
-import json
-import traceback
 import pymysql.cursors
-import datetime
-from flask import Flask, request, jsonify
-from diaryclass import diary
-from collections import defaultdict
+
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
 
@@ -16,7 +11,6 @@ origins = [
     "http://localhost:5173",
     'https://honeyary.vercel.app',
     "http://localhost:8080",
-    "http://localhost"
     "http://0.0.0.0:8080",
     "http://127.0.0.1:8080",
     "https://www.honeyary-ai.o-r.kr",
@@ -40,165 +34,10 @@ mysql_params = {
 }
 
 
-@app.post('/api/ai/diary/create')
-async def get_api_diary_create():
-    conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-
-    new_diary = diary(
-        diary_content = diary.diary_content(
-            feeling = data['feeling'],
-            when = data['when'],
-            where = data['where'],
-            who = data['who'],
-            what = data['what'],
-            realized = data['realized']
-        ),
-        metadata=None,
-        content=None,
-        title=None,
-        spicy_advice=None,
-        soft_advice=None
-    )
-
-    new_diary.get_diary_completion()
-    try:
-        with conn.cursor() as cursor:
-            query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
-            diary_id = cursor.lastrowid
-        conn.commit()
-        with conn.cursor() as cursor:
-            query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (datetime.datetime.now(), token, diary_id))
-
-        if new_diary.get_diary_data("feeling") is None:
-            get_diary_feelings()
-            with conn.cursor() as cursor:
-                query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-                cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
-            conn.commit()
-    except Exception as e:
-        print(e)
-        print(traceback.format_exc())
-    finally:
-        conn.close()
-
-
-    return jsonify({
-        "status": 201,
-        "message": "요청이 성공했습니다.",
-        "data": {
-            "diaryId": diary_id,
-            "diaryContent" : new_diary.get_diary_data("content")
-        }
-    }), 201
-
-
-@app.post('/api/ai/diary/feelings')
-async def get_diary_feelings():
-    conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-    dairy_id = data['diaryId']
-
-    try:
-        with conn.cursor() as cursor:
-            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
-            diary_content = cursor.fetchone()
-
-            diary_content = diary_content['content']
-
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None
-        )
-
-        new_diary.get_diary_feeling()
-        with conn.cursor() as cursor:
-            query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (new_diary.get_diary_data("feeling"), token, dairy_id))
-        conn.commit()
-    except Exception as e:
-        print(e)
-        print(traceback.format_exc())
-    finally:
-        conn.close()
-
-
-    return jsonify({
-        "status": 201,
-        "message": "요청이 성공했습니다.",
-        "data": {
-            "feeling": new_diary.get_diary_data("feeling")
-        }
-    }), 201
-
-
-@app.post('/api/ai/advice/content')
-async def get_diary_advice():
-    conn = pymysql.connect(**mysql_params)
-    data = await request.json()
-    authorization_header = await request.headers.get('Authorization')
-    if authorization_header and authorization_header.startswith('Bearer'): token = authorization_header.split(' ')[1]
-    dairy_id = data['diaryId']
-
-    try:
-        with conn.cursor() as cursor:
-            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
-        diary_content = cursor.fetchone()
-
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None
-        )
-
-        new_diary.get_diary_advice()
-
-        with conn.cursor() as cursor:
-            query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
-            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
-            adviceid = cursor.lastrowid
-            query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (adviceid, token, dairy_id))
-        conn.commit()
-    except Exception as e:
-        print(e)
-        print(traceback.format_exc())
-    finally:
-        conn.close()
-
-    return jsonify({
-        "status": 201,
-        "message": "요청이 성공했습니다.",
-        "data": {
-            "adviceId": adviceid,
-            "advice": {
-                "spicy": new_diary.get_diary_data("spicy_advice"),
-                "kind": new_diary.get_diary_data("soft_advice")
-            }
-        }
-    }), 201
-
-
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
     conn = pymysql.connect(**mysql_params)
     authorization_header = request.headers.get('Authorization')
-    
     token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTQ4MTc2MDMsImV4cCI6MTc0NjM1MzYwMywibWVtYmVySWQiOjExfQ.dD7L0Lvbhszvgl8ACup067cJjlLKObMCQkUufrxgoez8l_B1YDlo0FhbUpL7ktu7Six2TtDNQetIZc8fzy9R8g"
     if authorization_header and authorization_header.startswith('Bearer'):
         token = authorization_header.split(' ')[1]
@@ -242,6 +81,12 @@ async def get_diary_summary(request: Request):
         }
     }
 
+
+@app.get('/health', status_code=200)
+async def get_health_check():
+    return {
+        "message": "요청이 성공했습니다.",
+    }
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8080)
