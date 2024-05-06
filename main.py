@@ -5,7 +5,7 @@ import datetime
 from flask import Flask, request, jsonify
 from diaryclass import diary
 from collections import defaultdict
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
