@@ -15,6 +15,7 @@ from logger import logger
 app = FastAPI()
 
 origins = [
+    "./diaryclass.py",
     "http://localhost:5173",
     'https://honeyary.vercel.app',
     "http://localhost:8080",
