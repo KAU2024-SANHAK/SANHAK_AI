@@ -6,9 +6,6 @@ from collections import defaultdict
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
-import logging
-import sys
-from logger import logger
 
 
 
@@ -49,6 +46,12 @@ async def get_api_diary_create(request: Request):
     data = request.json()
     token = request.headers.get('Authorization')
 
+    if token is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
     new_diary = diary(
         diary_content = diary.diary_content(
             feeling = data['feeling'],
@@ -87,8 +90,15 @@ async def get_api_diary_create(request: Request):
         diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else ""
 
     except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
+
     finally:
         conn.close()
 
@@ -108,6 +118,18 @@ async def get_diary_feelings(request: Request):
     data = request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
+
+    if token is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
+    if dairy_id is None:
+        return {
+            "status": 400,
+            "message": "일기 ID가 없습니다."
+        }
 
     try:
         with conn.cursor() as cursor:
@@ -134,9 +156,16 @@ async def get_diary_feelings(request: Request):
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
             cursor.execute(query, (feeling, token, dairy_id))
         conn.commit()
+
     except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
     finally:
         conn.close()
 
@@ -156,6 +185,18 @@ async def get_diary_advice(request: Request):
     data = request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
+
+    if token is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
+    if dairy_id is None:
+        return {
+            "status": 400,
+            "message": "일기 ID가 없습니다."
+        }
 
     try:
         with conn.cursor() as cursor:
@@ -185,9 +226,17 @@ async def get_diary_advice(request: Request):
         advice_id = adviceid if adviceid is not None else 0
         spicy_advice = new_diary.get_diary_data("spicy_advice") if new_diary.get_diary_data("spicy_advice") else ""
         soft_advice = new_diary.get_diary_data("soft_advice") if new_diary.get_diary_data("soft_advice") else ""
+
     except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
+
     finally:
         conn.close()
 
@@ -210,6 +259,18 @@ async def get_diary_summary(request: Request):
     conn = pymysql.connect(**mysql_params)
     token = request.headers.get('Authorization')
     date = request.query_params.get("date")
+
+    if token is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
+    if date is None:
+        return {
+            "status": 400,
+            "message": "날짜가 없습니다."
+        }
 
     try:
         with conn.cursor() as cursor:
@@ -242,9 +303,18 @@ async def get_diary_summary(request: Request):
         #두번째로 많은 감정도 선택
         feeling_count[max_feeling] = 0
         second_max_feeling = max(feeling_count, key=feeling_count.get)
+
+
     except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
+
     finally:
         conn.close()
 
@@ -257,13 +327,6 @@ async def get_diary_summary(request: Request):
         }
     }
 
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-stream_handler = logging.StreamHandler(sys.stdout)
-log_formatter = logging.Formatter("%(asctime)s [%(processName)s: %(process)d] [%(threadName)s: %(thread)d] [%(levelname)s] %(name)s: %(message)s")
-stream_handler.setFormatter(log_formatter)
-logger.addHandler(stream_handler)
 
 
 if __name__ == '__main__':
