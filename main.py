@@ -102,13 +102,15 @@ async def get_api_diary_create(request: Request):
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
             await cursor.execute(query, (title, content, member_id))
             diary_id = cursor.lastrowid
-        await conn.commit()
 
+            await conn.commit()
 
         async with conn.cursor() as cursor:
+            time = datetime.datetime.now()
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (datetime.datetime.now(), member_id, diary_id))
+            await cursor.execute(query, (time, member_id, diary_id))
 
+            await conn.commit()
 
         if await new_diary.get_diary_data("feeling") is None:
             await get_diary_feelings()
