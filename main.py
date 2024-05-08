@@ -41,7 +41,14 @@ mysql_params = {
 }
 
 async def connect_mysql():
-    conn = await aiomysql.connect(**mysql_params)
+    conn = await aiomysql.connect(
+        host=mysql_params['host'],
+        port=mysql_params['port'],
+        user=mysql_params['user'],
+        password=mysql_params['password'],
+        charset=mysql_params['charset'],
+        cursorclass=pymysql.cursors.DictCursor
+    )
     return conn
 
 @app.post('/api/ai/diary/create')
@@ -76,18 +83,18 @@ async def get_api_diary_create(request: Request):
     try:
         with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
+            cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token, mysql_params['database']))
             diary_id = cursor.lastrowid
         conn.commit()
         with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (datetime.datetime.now(), token, diary_id))
+            cursor.execute(query, (datetime.datetime.now(), token, diary_id, mysql_params['database']))
 
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
             with conn.cursor() as cursor:
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-                cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
+                cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id, mysql_params['database']))
             conn.commit()
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
@@ -138,7 +145,7 @@ async def get_diary_feelings(request: Request):
     try:
         with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
+            cursor.execute(query, (token, dairy_id, mysql_params['database']))
             diary_content = cursor.fetchone()
 
             diary_content = diary_content['content']
@@ -158,7 +165,7 @@ async def get_diary_feelings(request: Request):
 
         with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (feeling, token, dairy_id))
+            cursor.execute(query, (feeling, token, dairy_id, mysql_params['database']))
         conn.commit()
 
     except Exception as e:
@@ -205,7 +212,7 @@ async def get_diary_advice(request: Request):
     try:
         with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (token, dairy_id))
+            cursor.execute(query, (token, dairy_id, mysql_params['database']))
         diary_content = cursor.fetchone()
 
         new_diary = diary(
@@ -221,10 +228,10 @@ async def get_diary_advice(request: Request):
 
         with conn.cursor() as cursor:
             query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
-            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
+            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice"), mysql_params['database']))
             adviceid = cursor.lastrowid
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            cursor.execute(query, (adviceid, token, dairy_id))
+            cursor.execute(query, (adviceid, token, dairy_id, mysql_params['database']))
         conn.commit()
          # adviceId, spicy, kind가 null인 경우를 처리합니다.
         advice_id = adviceid if adviceid is not None else 0
@@ -280,7 +287,7 @@ async def get_diary_summary(request: Request):
         with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
-            cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None))
+            cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None, mysql_params['database']))
             result = cursor.fetchall()
             feelings = [row['feeling'] for row in result]
 
