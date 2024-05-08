@@ -1,5 +1,5 @@
-import aiomysql
 import traceback
+import pymysql.cursors
 import datetime
 from diaryclass import diary
 from collections import defaultdict
@@ -36,36 +36,14 @@ mysql_params = {
     'password': 'sanhakkau11223344!!',
     'database': 'kkooldanji',
     'charset': 'utf8',
-    'cursorclass': aiomysql.cursors.DictCursor
+    'cursorclass': pymysql.cursors.DictCursor
 }
 
-async def connect_mysql():
-    try:
-        conn = await aiomysql.connect(
-            host=mysql_params['host'],
-            port=mysql_params['port'],
-            user=mysql_params['user'],
-            password=mysql_params['password'],
-            db=mysql_params['database'],
-            charset=mysql_params['charset'],
-            cursorclass=aiomysql.cursors.DictCursor
-        )
-        return conn
-    except Exception as e:
-        error_message = str(e)
-        traceback_message = traceback.format_exc()
-        print("MySQL connection failed:", error_message)
-        return None
 
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create(request: Request):
-    conn = await connect_mysql()
-    if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
-    data = await request.json()
+    conn = pymysql.connect(**mysql_params)
+    data = request.json()
     token = request.headers.get('Authorization')
 
     if token is None:
@@ -91,6 +69,11 @@ async def get_api_diary_create(request: Request):
     )
 
     new_diary.get_diary_completion()
+    if new_diary.get_diary_data("content") is None:
+        return {
+            "status": 400,
+            "message": "openai api 오류입니다."
+        }
     try:
         async with conn.cursor() as cursor:
             query = "SELECT member_id FROM member WHERE refresh_token = %s"
@@ -104,19 +87,19 @@ async def get_api_diary_create(request: Request):
             }
         async with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            await cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
+            cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
             diary_id = cursor.lastrowid
-        await conn.commit()
-        async with conn.cursor() as cursor:
+        conn.commit()
+        with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (datetime.datetime.now(), token, diary_id))
         
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
-            async with conn.cursor() as cursor:
+            with conn.cursor() as cursor:
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-                await cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
-            await conn.commit()
+                cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
+            conn.commit()
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
         diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else ""
@@ -146,13 +129,8 @@ async def get_api_diary_create(request: Request):
 
 @app.post('/api/ai/diary/feelings')
 async def get_diary_feelings(request: Request):
-    conn = await connect_mysql()
-    if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
-    data = await request.json()
+    conn = pymysql.connect(**mysql_params)
+    data = request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
@@ -181,8 +159,8 @@ async def get_diary_feelings(request: Request):
             }
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (token, dairy_id))
-            diary_content = await cursor.fetchone()
+            cursor.execute(query, (token, dairy_id))
+            diary_content = cursor.fetchone()
 
             diary_content = diary_content['content']
 
@@ -199,10 +177,10 @@ async def get_diary_feelings(request: Request):
         # feeling이 null인 경우를 처리합니다.
         feeling = new_diary.get_diary_data("feeling") if new_diary.get_diary_data("feeling") else ""
 
-        async with conn.cursor() as cursor:
+        with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (feeling, token, dairy_id))
-        await conn.commit()
+            cursor.execute(query, (feeling, token, dairy_id))
+        conn.commit()
 
     except Exception as e:
         error_message = str(e)
@@ -228,13 +206,8 @@ async def get_diary_feelings(request: Request):
 
 @app.post('/api/ai/advice/content')
 async def get_diary_advice(request: Request):
-    conn = await connect_mysql()
-    if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
-    data = await request.json()
+    conn = pymysql.connect(**mysql_params)
+    data = request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
@@ -263,8 +236,13 @@ async def get_diary_advice(request: Request):
             }
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (token, dairy_id))
-        diary_content = await cursor.fetchone()
+            cursor.execute(query, (token, dairy_id))
+        diary_content = cursor.fetchone()
+        if diary_content is None:
+            return {
+                "status": 400,
+                "message": "일기가 없습니다."
+            }
 
         new_diary = diary(
             diary_content = None,
@@ -277,13 +255,18 @@ async def get_diary_advice(request: Request):
 
         new_diary.get_diary_advice()
 
-        async with conn.cursor() as cursor:
+        with conn.cursor() as cursor:
             query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
-            await cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
+            cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
             adviceid = cursor.lastrowid
+            if adviceid is None:
+                return {
+                    "status": 400,
+                    "message": "advice가 없습니다."
+                }
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (adviceid, token, dairy_id))
-        await conn.commit()
+            cursor.execute(query, (adviceid, token, dairy_id))
+        conn.commit()
          # adviceId, spicy, kind가 null인 경우를 처리합니다.
         advice_id = adviceid if adviceid is not None else 0
         spicy_advice = new_diary.get_diary_data("spicy_advice") if new_diary.get_diary_data("spicy_advice") else ""
@@ -318,12 +301,7 @@ async def get_diary_advice(request: Request):
 
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
-    conn = await connect_mysql()
-    if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+    conn = pymysql.connect(**mysql_params)
     token = request.headers.get('Authorization')
     date = request.query_params.get("date")
 
@@ -353,8 +331,8 @@ async def get_diary_summary(request: Request):
         async with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
-            await cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None))
-            result = await cursor.fetchall()
+            cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None))
+            result = cursor.fetchall()
             feelings = [row['feeling'] for row in result]
 
 
