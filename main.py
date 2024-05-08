@@ -1,6 +1,5 @@
 import aiomysql
 import traceback
-import pymysql.cursors
 import datetime
 from diaryclass import diary
 from collections import defaultdict
@@ -37,7 +36,7 @@ mysql_params = {
     'password': 'sanhakkau11223344!!',
     'database': 'kkooldanji',
     'charset': 'utf8',
-    'cursorclass': pymysql.cursors.DictCursor
+    'cursorclass': aiomysql.cursors.DictCursor
 }
 
 async def connect_mysql():
@@ -47,7 +46,7 @@ async def connect_mysql():
         user=mysql_params['user'],
         password=mysql_params['password'],
         charset=mysql_params['charset'],
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=aiomysql.cursors.DictCursor
     )
     return conn
 
