@@ -122,7 +122,7 @@ async def get_api_diary_create(request: Request):
         }
 
     finally:
-        await conn.close()
+        conn.close()
 
     return {
             "status": 201,
@@ -194,7 +194,7 @@ async def get_diary_feelings(request: Request):
             "traceback": traceback_message
         }
     finally:
-        await conn.close()
+        conn.close()
 
 
     return {
@@ -270,7 +270,7 @@ async def get_diary_advice(request: Request):
         }
 
     finally:
-        await conn.close()
+        conn.close()
 
    
     return {
@@ -353,7 +353,7 @@ async def get_diary_summary(request: Request):
         }
 
     finally:
-        await conn.close()
+        conn.close()
 
     return {
         "status": 200,
