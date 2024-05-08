@@ -93,6 +93,16 @@ async def get_api_diary_create(request: Request):
     new_diary.get_diary_completion()
     try:
         async with conn.cursor() as cursor:
+            query = "SELECT member_id FROM member WHERE refresh_token = %s"
+            await cursor.execute(query, token)
+            token = cursor.fetchone()['member_id']
+        await conn.commit()
+        if token is None:
+            return {
+                "status": 401,
+                "message": "토큰이 없습니다."
+            }
+        async with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
             await cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
             diary_id = cursor.lastrowid
@@ -100,7 +110,7 @@ async def get_api_diary_create(request: Request):
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (datetime.datetime.now(), token, diary_id))
-
+        
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
             async with conn.cursor() as cursor:
@@ -159,6 +169,16 @@ async def get_diary_feelings(request: Request):
         }
 
     try:
+        async with conn.cursor() as cursor:
+            query = "SELECT member_id FROM member WHERE refresh_token = %s"
+            await cursor.execute(query, token)
+            token = cursor.fetchone()['member_id']
+        await conn.commit()
+        if token is None:
+            return {
+                "status": 401,
+                "message": "토큰이 없습니다."
+            }
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (token, dairy_id))
@@ -231,6 +251,16 @@ async def get_diary_advice(request: Request):
         }
 
     try:
+        async with conn.cursor() as cursor:
+            query = "SELECT member_id FROM member WHERE refresh_token = %s"
+            await cursor.execute(query, token)
+            token = cursor.fetchone()['member_id']
+        await conn.commit()
+        if token is None:
+            return {
+                "status": 401,
+                "message": "토큰이 없습니다."
+            }
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (token, dairy_id))
@@ -310,6 +340,16 @@ async def get_diary_summary(request: Request):
         }
 
     try:
+        async with conn.cursor() as cursor:
+            query = "SELECT member_id FROM member WHERE refresh_token = %s"
+            await cursor.execute(query, token)
+            token = cursor.fetchone()['member_id']
+        await conn.commit()
+        if token is None:
+            return {
+                "status": 401,
+                "message": "토큰이 없습니다."
+            }
         async with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
