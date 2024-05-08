@@ -162,7 +162,7 @@ async def get_diary_feelings(request: Request):
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (token, dairy_id))
-            diary_content = cursor.fetchone()
+            diary_content = await cursor.fetchone()
 
             diary_content = diary_content['content']
 
