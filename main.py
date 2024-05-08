@@ -90,7 +90,7 @@ async def get_api_diary_create(request: Request):
         soft_advice=None
     )
 
-    new_diary.get_diary_completion()
+    await new_diary.get_diary_completion()
     try:
         async with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
@@ -102,7 +102,7 @@ async def get_api_diary_create(request: Request):
             await cursor.execute(query, (datetime.datetime.now(), member_id, diary_id))
         
         if new_diary.get_diary_data("feeling") is None:
-            get_diary_feelings()
+            await get_diary_feelings()
             async with conn.cursor() as cursor:
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
                 await cursor.execute(query, (new_diary.get_diary_data("feeling"), member_id, diary_id))
