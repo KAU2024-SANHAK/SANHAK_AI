@@ -96,6 +96,7 @@ async def get_api_diary_create(request: Request):
     print("db")
     await new_diary.get_diary_completion()
     print("diary 생성 완료")
+    print(member_id)
     try:
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
