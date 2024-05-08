@@ -76,12 +76,12 @@ async def get_api_diary_create(request: Request):
 
     new_diary = diary(
         diary_content = diary.diary_content(
-            feeling = data['feeling'],
-            when = data['when'],
-            where = data['where'],
-            who = data['who'],
-            what = data['what'],
-            realized = data['realized']
+            feeling = data.get('feeling'),
+            when = data.get('when'),
+            where = data.get('where'),
+            who = data.get('who'),
+            what = data.get('what'),
+            realized = data.get('realized')
         ),
         metadata=None,
         content=None,
@@ -154,7 +154,7 @@ async def get_diary_feelings(request: Request):
         }
     data = await request.json()
     token = request.headers.get('Authorization')
-    dairy_id = data['diaryId']
+    dairy_id = data.get('diaryId')
 
     if token is None:
         return {
@@ -236,7 +236,7 @@ async def get_diary_advice(request: Request):
         }
     data = await request.json()
     token = request.headers.get('Authorization')
-    dairy_id = data['diaryId']
+    dairy_id = data.get('diaryId')
 
     if token is None:
         return {
