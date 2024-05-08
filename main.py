@@ -52,12 +52,19 @@ async def connect_mysql():
         )
         return conn
     except Exception as e:
-        print(f"Failed to connect to MySQL: {e}")
-        raise e
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        print("MySQL connection failed:", error_message)
+        return None
 
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create(request: Request):
     conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
     data = await request.json()
     token = request.headers.get('Authorization')
 
@@ -130,6 +137,11 @@ async def get_api_diary_create(request: Request):
 @app.post('/api/ai/diary/feelings')
 async def get_diary_feelings(request: Request):
     conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
     data = await request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
@@ -197,6 +209,11 @@ async def get_diary_feelings(request: Request):
 @app.post('/api/ai/advice/content')
 async def get_diary_advice(request: Request):
     conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
     data = await request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
@@ -272,6 +289,11 @@ async def get_diary_advice(request: Request):
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
     conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
     token = request.headers.get('Authorization')
     date = request.query_params.get("date")
 
