@@ -95,7 +95,14 @@ async def get_api_diary_create(request: Request):
         async with conn.cursor() as cursor:
             query = "SELECT member_id FROM member WHERE refresh_token = %s"
             await cursor.execute(query, token)
-            token = cursor.fetchone()['member_id']
+            result = await cursor.fetchone()
+            if result:
+                token = result['member_id']
+            else:
+                return {
+                    "status": 401,
+                    "message": "토큰이 올바르지 않습니다."
+                }
         await conn.commit()
         if token is None:
             return {
@@ -172,7 +179,14 @@ async def get_diary_feelings(request: Request):
         async with conn.cursor() as cursor:
             query = "SELECT member_id FROM member WHERE refresh_token = %s"
             await cursor.execute(query, token)
-            token = cursor.fetchone()['member_id']
+            result = await cursor.fetchone()
+            if result:
+                token = result['member_id']
+            else:
+                return {
+                    "status": 401,
+                    "message": "토큰이 올바르지 않습니다."
+                }
         await conn.commit()
         if token is None:
             return {
@@ -254,7 +268,14 @@ async def get_diary_advice(request: Request):
         async with conn.cursor() as cursor:
             query = "SELECT member_id FROM member WHERE refresh_token = %s"
             await cursor.execute(query, token)
-            token = cursor.fetchone()['member_id']
+            result = await cursor.fetchone()
+            if result:
+                token = result['member_id']
+            else:
+                return {
+                    "status": 401,
+                    "message": "토큰이 올바르지 않습니다."
+                }
         await conn.commit()
         if token is None:
             return {
@@ -343,7 +364,14 @@ async def get_diary_summary(request: Request):
         async with conn.cursor() as cursor:
             query = "SELECT member_id FROM member WHERE refresh_token = %s"
             await cursor.execute(query, token)
-            token = cursor.fetchone()['member_id']
+            result = await cursor.fetchone()
+            if result:
+                token = result['member_id']
+            else:
+                return {
+                    "status": 401,
+                    "message": "토큰이 올바르지 않습니다."
+                }
         await conn.commit()
         if token is None:
             return {
