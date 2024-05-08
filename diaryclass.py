@@ -50,19 +50,19 @@ class diary:
             return getattr(self, attributes, None)
         else:
             if attributes == "metadata":
-                return self.metadata.get_metadata(attributes)
+                return await self.metadata.get_metadata(attributes)
             else:
-                return self.diary_content.get_diary_content(attributes)
+                return await self.diary_content.get_diary_content(attributes)
 
 
     async def get_diary_completion(self):
 
         prompt = (Prompt.diary_complete_prompt %
-                  (self.get_diary_data("when"),
-                   self.get_diary_data("where"),
-                   self.get_diary_data("who"),
-                   self.get_diary_data("what"),
-                   self.get_diary_data("realized")))
+                  (await self.get_diary_data("when"),
+                   await self.get_diary_data("where"),
+                   await self.get_diary_data("who"),
+                   await self.get_diary_data("what"),
+                   await self.get_diary_data("realized")))
 
         client = await self.get_diary_data("client")
         completion = client.chat.completions.create(
