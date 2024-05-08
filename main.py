@@ -100,9 +100,11 @@ async def get_api_diary_create(request: Request):
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
             content = await new_diary.get_diary_data("content")
+            print(content)
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
             await cursor.execute(query, (title, content, member_id))
             diary_id = cursor.lastrowid
+            print(diary_id)
         await conn.commit()
         print("저장 완료")
         async with conn.cursor() as cursor:
