@@ -64,7 +64,8 @@ class diary:
                    self.get_diary_data("what"),
                    self.get_diary_data("realized")))
 
-        completion = self.get_diary_data("client").chat.completions.create(
+        client = await self.get_diary_data("client")
+        completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
