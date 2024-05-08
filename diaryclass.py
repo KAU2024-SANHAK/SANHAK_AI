@@ -120,4 +120,3 @@ class diary:
 
         self.spicy_advice = content['T comment']
         self.soft_advice = content['F comment']
-
