@@ -66,9 +66,9 @@ async def get_api_diary_create(request: Request):
             "message": "MySQL 연결에 실패했습니다."
         }
     data = await request.json()
-    token = request.headers.get('Authorization')
+    member_id = request.headers.get('Authorization')
 
-    if token is None:
+    if member_id is None:
         return {
             "status": 401,
             "message": "헤더에 memberId가 없습니다."
@@ -94,18 +94,18 @@ async def get_api_diary_create(request: Request):
     try:
         async with conn.cursor() as cursor:
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            await cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), token))
+            await cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), member_id))
             diary_id = cursor.lastrowid
         await conn.commit()
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (datetime.datetime.now(), token, diary_id))
+            await cursor.execute(query, (datetime.datetime.now(), member_id, diary_id))
         
         if new_diary.get_diary_data("feeling") is None:
             get_diary_feelings()
             async with conn.cursor() as cursor:
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-                await cursor.execute(query, (new_diary.get_diary_data("feeling"), token, diary_id))
+                await cursor.execute(query, (new_diary.get_diary_data("feeling"), member_id, diary_id))
             await conn.commit()
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
@@ -143,10 +143,10 @@ async def get_diary_feelings(request: Request):
             "message": "MySQL 연결에 실패했습니다."
         }
     data = await request.json()
-    token = request.headers.get('Authorization')
+    member_id = request.headers.get('Authorization')
     dairy_id = data.get('diaryId')
 
-    if token is None:
+    if member_id is None:
         return {
             "status": 401,
             "message": "토큰이 없습니다."
@@ -161,7 +161,7 @@ async def get_diary_feelings(request: Request):
     try:
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (token, dairy_id))
+            await cursor.execute(query, (member_id, dairy_id))
             diary_content = await cursor.fetchone()
 
             diary_content = diary_content['content']
@@ -181,7 +181,7 @@ async def get_diary_feelings(request: Request):
 
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (feeling, token, dairy_id))
+            await cursor.execute(query, (feeling, member_id, dairy_id))
         await conn.commit()
 
     except Exception as e:
@@ -215,10 +215,10 @@ async def get_diary_advice(request: Request):
             "message": "MySQL 연결에 실패했습니다."
         }
     data = await request.json()
-    token = request.headers.get('Authorization')
+    member_id = request.headers.get('Authorization')
     dairy_id = data.get('diaryId')
 
-    if token is None:
+    if member_id is None:
         return {
             "status": 401,
             "message": "토큰이 없습니다."
@@ -233,7 +233,7 @@ async def get_diary_advice(request: Request):
     try:
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (token, dairy_id))
+            await cursor.execute(query, (member_id, dairy_id))
         diary_content = await cursor.fetchone()
 
         new_diary = diary(
@@ -252,7 +252,7 @@ async def get_diary_advice(request: Request):
             await cursor.execute(query, (new_diary.get_diary_data("soft_advice"), new_diary.get_diary_data("spicy_advice")))
             adviceid = cursor.lastrowid
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (adviceid, token, dairy_id))
+            await cursor.execute(query, (adviceid, member_id, dairy_id))
         await conn.commit()
          # adviceId, spicy, kind가 null인 경우를 처리합니다.
         advice_id = adviceid if adviceid is not None else 0
@@ -294,10 +294,10 @@ async def get_diary_summary(request: Request):
             "status": 500,
             "message": "MySQL 연결에 실패했습니다."
         }
-    token = request.headers.get('Authorization')
+    member_id = request.headers.get('Authorization')
     date = request.query_params.get("date")
 
-    if token is None:
+    if member_id is None:
         return {
             "status": 401,
             "message": "토큰이 없습니다."
@@ -313,7 +313,7 @@ async def get_diary_summary(request: Request):
         async with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
-            await cursor.execute(query, (token, date[:4] if date else None, date[5:7] if date else None))
+            await cursor.execute(query, (member_id, date[:4] if date else None, date[5:7] if date else None))
             result = await cursor.fetchall()
             feelings = [row['feeling'] for row in result]
 
