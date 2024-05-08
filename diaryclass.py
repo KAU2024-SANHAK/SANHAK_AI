@@ -4,6 +4,10 @@ import json
 from openai import OpenAI
 import os
 import prompt as Prompt
+from dotenv import load_dotenv
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 class diary:
     async def change_feeling(self, feeling):
@@ -39,7 +43,7 @@ class diary:
         self.title = title
         self.spicy_advice = spicy_advice
         self.soft_advice = soft_advice
-        self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+        self.client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     async def get_diary_data(self, attributes):
         if attributes in ["content", "title", "spicy_advice", "soft_advice", "client"]:
