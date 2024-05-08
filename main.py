@@ -1,3 +1,4 @@
+import asyncio
 import traceback
 import pymysql.cursors
 import datetime
@@ -39,11 +40,14 @@ mysql_params = {
     'cursorclass': pymysql.cursors.DictCursor
 }
 
+async def connect_mysql():
+    conn = await asyncio.wait_for(pymysql.connect(**mysql_params), timeout=None)
+    return conn
 
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create(request: Request):
-    conn = pymysql.connect(**mysql_params)
-    data = request.json()
+    conn = await connect_mysql()
+    data = await request.json()
     token = request.headers.get('Authorization')
 
     if token is None:
@@ -114,8 +118,8 @@ async def get_api_diary_create(request: Request):
 
 @app.post('/api/ai/diary/feelings')
 async def get_diary_feelings(request: Request):
-    conn = pymysql.connect(**mysql_params)
-    data = request.json()
+    conn = await connect_mysql()
+    data = await request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
@@ -181,8 +185,8 @@ async def get_diary_feelings(request: Request):
 
 @app.post('/api/ai/advice/content')
 async def get_diary_advice(request: Request):
-    conn = pymysql.connect(**mysql_params)
-    data = request.json()
+    conn = await connect_mysql()
+    data = await request.json()
     token = request.headers.get('Authorization')
     dairy_id = data['diaryId']
 
@@ -256,7 +260,7 @@ async def get_diary_advice(request: Request):
 
 @app.get('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
-    conn = pymysql.connect(**mysql_params)
+    conn = await connect_mysql()
     token = request.headers.get('Authorization')
     date = request.query_params.get("date")
 
