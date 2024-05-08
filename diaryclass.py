@@ -11,7 +11,7 @@ class diary:
         return feelings
 
     class metadata:
-        async def __init__(self, member_id, created_at, updated_at, diarytype):
+        def __init__(self, member_id, created_at, updated_at, diarytype):
             self.member_id = member_id
             self.created_at = created_at
             self.updated_at = updated_at
@@ -21,7 +21,7 @@ class diary:
             return getattr(self, attributes, None)
 
     class diary_content:
-        async def __init__(self, feeling, when, where, who, what, realized):
+        def __init__(self, feeling, when, where, who, what, realized):
             self.feeling = feeling
             self.when = when
             self.where = where
@@ -32,7 +32,7 @@ class diary:
             return getattr(self, attributes, None)
 
 
-    async def __init__(self, diary_content, metadata, content, title, spicy_advice, soft_advice):
+    def __init__(self, diary_content, metadata, content, title, spicy_advice, soft_advice):
         self.diary_content = diary_content
         self.metadata = metadata
         self.content = content
