@@ -6,6 +6,9 @@ from collections import defaultdict
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
+import tracemalloc
+tracemalloc.start()
+
 
 
 
@@ -93,23 +96,26 @@ async def get_api_diary_create(request: Request):
     await new_diary.get_diary_completion()
     try:
         async with conn.cursor() as cursor:
+            title = await new_diary.get_diary_data("title")
+            content = await new_diary.get_diary_data("content")
             query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            await cursor.execute(query, (new_diary.get_diary_data("title"), new_diary.get_diary_data("content"), member_id))
+            await cursor.execute(query, (title, content, member_id))
             diary_id = cursor.lastrowid
         await conn.commit()
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (datetime.datetime.now(), member_id, diary_id))
         
-        if new_diary.get_diary_data("feeling") is None:
+        if await new_diary.get_diary_data("feeling") is None:
             await get_diary_feelings()
             async with conn.cursor() as cursor:
+                feeling = await new_diary.get_diary_data("feeling")
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-                await cursor.execute(query, (new_diary.get_diary_data("feeling"), member_id, diary_id))
+                await cursor.execute(query, (feeling, member_id, diary_id))
             await conn.commit()
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
-        diary_content = new_diary.get_diary_data("content") if new_diary.get_diary_data("content") else ""
+        diary_content = await new_diary.get_diary_data("content") if await new_diary.get_diary_data("content") else ""
 
     except Exception as e:
         error_message = str(e)
