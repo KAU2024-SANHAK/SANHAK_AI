@@ -88,14 +88,17 @@ class diary:
 
 
     async def is_feeling_empty(self):
-        if self.get_diary_data("feeling") == None:
+        if await self.get_diary_data("feeling") == None:
             return False
         else:
             return True
 
+
     async def get_diary_feeling(self):
-        prompt = (Prompt.diary_feeling_prompt % self.get_diary_data("content"))
-        completion = self.get_diary_data("client").chat.completions.create(
+        prompt = (Prompt.diary_feeling_prompt % await self.get_diary_data("content"))
+
+        client = await self.get_diary_data("client")
+        completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
@@ -104,11 +107,14 @@ class diary:
         )
 
         content = completion.choices[0].message.content
-        self.feeling = self.change_feeling(content)
+        self.feeling = await self.change_feeling(content)
+        print(self.feeling)
 
     async def get_diary_advice(self):
-        prompt = (Prompt.diary_advice_prompt % self.get_diary_data("content"))
-        completion = self.get_diary_data("client").chat.completions.create(
+        prompt = (Prompt.diary_advice_prompt % await self.get_diary_data("content"))
+
+        client = await self.get_diary_data("client")
+        completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
