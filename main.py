@@ -93,7 +93,9 @@ async def get_api_diary_create(request: Request):
         soft_advice=None
     )
 
+    print("db")
     await new_diary.get_diary_completion()
+    print("diary 생성 완료")
     try:
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
@@ -102,6 +104,7 @@ async def get_api_diary_create(request: Request):
             await cursor.execute(query, (title, content, member_id))
             diary_id = cursor.lastrowid
         await conn.commit()
+        print("저장 완료")
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
             await cursor.execute(query, (datetime.datetime.now(), member_id, diary_id))
