@@ -1,4 +1,4 @@
-import asyncio
+import aiomysql
 import traceback
 import pymysql.cursors
 import datetime
@@ -41,7 +41,7 @@ mysql_params = {
 }
 
 async def connect_mysql():
-    conn = await asyncio.wait_for(pymysql.connect(**mysql_params), timeout=None)
+    conn = await aiomysql.connect(**mysql_params)
     return conn
 
 @app.post('/api/ai/diary/create')
