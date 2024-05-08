@@ -40,15 +40,20 @@ mysql_params = {
 }
 
 async def connect_mysql():
-    conn = await aiomysql.connect(
-        host=mysql_params['host'],
-        port=mysql_params['port'],
-        user=mysql_params['user'],
-        password=mysql_params['password'],
-        charset=mysql_params['charset'],
-        cursorclass=aiomysql.cursors.DictCursor
-    )
-    return conn
+    try:
+        conn = await aiomysql.connect(
+            host=mysql_params['host'],
+            port=mysql_params['port'],
+            user=mysql_params['user'],
+            password=mysql_params['password'],
+            db=mysql_params['database'],
+            charset=mysql_params['charset'],
+            cursorclass=aiomysql.cursors.DictCursor
+        )
+        return conn
+    except Exception as e:
+        print(f"Failed to connect to MySQL: {e}")
+        raise e
 
 @app.post('/api/ai/diary/create')
 async def get_api_diary_create(request: Request):
