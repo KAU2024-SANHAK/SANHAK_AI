@@ -303,7 +303,7 @@ async def get_diary_advice(request: Request):
     }
 
 
-@app.get('/api/ai/diary/summary')
+@app.post('/api/ai/diary/summary')
 async def get_diary_summary(request: Request):
     conn = await connect_mysql()
     if conn is None:
