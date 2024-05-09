@@ -95,34 +95,26 @@ async def get_api_diary_create(request: Request):
 
     await new_diary.get_diary_completion()
 
+    if await new_diary.get_diary_data("feeling") is None:
+        await get_diary_feelings()
+        feeling = await new_diary.get_diary_data("feeling")
+        print(feeling)
+    else:
+        feeling = await new_diary.get_diary_data("feeling")
+        print(feeling)
+
+    time = datetime.datetime.now()
+
     try:
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
             content = await new_diary.get_diary_data("content")
-            query = "INSERT INTO diary (`title`, `content`, `member_id`) VALUES (%s, %s, %s)"
-            await cursor.execute(query, (title, content, member_id))
+            query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`feeling`, `member_id`) "
+                     "VALUES (%s, %s, %s, %s, %s)")
+            await cursor.execute(query, (title, content, time, feeling, member_id))
             diary_id = cursor.lastrowid
 
             await conn.commit()
-
-        async with conn.cursor() as cursor:
-            time = datetime.datetime.now()
-            query = "UPDATE diary SET writed_at = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (time, member_id, diary_id))
-
-            await conn.commit()
-
-            print(await new_diary.get_diary_data("feeling"))
-
-        if await new_diary.get_diary_data("feeling") is None:
-            await get_diary_feelings()
-
-        async with conn.cursor() as cursor:
-            feeling = await new_diary.get_diary_data("feeling")
-            query = "INSERT diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (feeling, member_id, diary_id))
-        await conn.commit()
-
 
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
