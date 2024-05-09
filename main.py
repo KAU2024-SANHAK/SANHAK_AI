@@ -112,9 +112,10 @@ async def get_api_diary_create(request: Request):
 
             await conn.commit()
 
+            print(await new_diary.get_diary_data("feeling"))
+
         if await new_diary.get_diary_data("feeling") is None:
             await get_diary_feelings()
-
             async with conn.cursor() as cursor:
                 feeling = await new_diary.get_diary_data("feeling")
                 query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
