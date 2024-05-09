@@ -138,8 +138,10 @@ async def get_api_diary_create(request: Request):
             "message": "요청이 성공했습니다.",
             "data": {
                 "diaryId": diary_id,
-                "diaryContent" : diary_content,
-                "feeling": feeling
+                "title": title,
+                "diaryContent": diary_content,
+                "feeling": feeling,
+                "writed_at": time.strftime("%Y-%m-%d %H:%M:%S")
             }
     }
 
