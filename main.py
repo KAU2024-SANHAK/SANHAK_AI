@@ -334,6 +334,7 @@ async def get_diary_summary(request: Request):
             result = await cursor.fetchall()
             feelings = [row['feeling'] for row in result]
 
+        print(feelings)
 
         feeling_count = {
             "HAPPY": 0,
