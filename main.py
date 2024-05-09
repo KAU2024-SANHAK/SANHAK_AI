@@ -320,12 +320,6 @@ async def get_diary_summary(request: Request):
             "message": "토큰이 없습니다."
         }
 
-    if date is None:
-        return {
-            "status": 400,
-            "message": "날짜가 없습니다."
-        }
-
     try:
         async with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
@@ -336,29 +330,17 @@ async def get_diary_summary(request: Request):
 
         print(feelings)
 
-        feeling_count = {
-            "HAPPY": 0,
-            "SAD": 0,
-            "ANGRY": 0,
-            "WORRY": 0,
-            "SURPRISED": 0,
-            "RELAXED": 0,
-            "None": 0
-        }
-        if not feelings:  # 쿼리 결과가 비어 있는 경우
-            # 쿼리 결과가 비어 있는 경우, 기본값으로 처리합니다.
-            max_feeling = "None"
-            second_max_feeling = "None"
-        else:
-            feeling_count = defaultdict(int)
+        feeling_count = defaultdict(int)
         for feeling in feelings:
             feeling_count[feeling] += 1
 
-        max_feeling = max(feeling_count, key=feeling_count.get)
-        #두번째로 많은 감정도 선택
-        feeling_count[max_feeling] = 0
-        second_max_feeling = max(feeling_count, key=feeling_count.get)
-
+        if feelings:
+            max_feeling = max(feeling_count, key=feeling_count.get)
+            feeling_count[max_feeling] = 0
+            second_max_feeling = max(feeling_count, key=feeling_count.get)
+        else:
+            max_feeling = None
+            second_max_feeling = None
 
     except Exception as e:
         error_message = str(e)
