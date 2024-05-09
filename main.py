@@ -312,7 +312,7 @@ async def get_diary_summary(request: Request):
             "message": "MySQL 연결에 실패했습니다."
         }
     member_id = request.headers.get('Authorization')
-    date = request.query_params.get("date")
+    date = datetime.datetime.now()
 
     if member_id is None:
         return {
