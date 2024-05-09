@@ -118,7 +118,7 @@ async def get_api_diary_create(request: Request):
             await get_diary_feelings()
             async with conn.cursor() as cursor:
                 feeling = await new_diary.get_diary_data("feeling")
-                query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
+                query = "INSERT diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
                 await cursor.execute(query, (feeling, member_id, diary_id))
             await conn.commit()
 
