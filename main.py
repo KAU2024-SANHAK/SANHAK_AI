@@ -333,14 +333,18 @@ async def get_diary_summary(request: Request):
         feeling_count = defaultdict(int)
         for feeling in feelings:
             feeling_count[feeling] += 1
+            print(feeling_count)
 
         if feelings:
             max_feeling = max(feeling_count, key=feeling_count.get)
+            print(max_feeling)
             feeling_count[max_feeling] = 0
             second_max_feeling = max(feeling_count, key=feeling_count.get)
+            print(second_max_feeling)
         else:
             max_feeling = None
             second_max_feeling = None
+            print(max_feeling)
 
     except Exception as e:
         error_message = str(e)
