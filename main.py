@@ -330,7 +330,7 @@ async def get_diary_summary(request: Request):
         async with conn.cursor() as cursor:
             ## 주어진 date에 해당하는 년도와 해당 월에 작성된 일기의 감정을 분석
             query = "SELECT feeling FROM diary WHERE member_id = %s AND YEAR(writed_at) = %s AND MONTH(writed_at) = %s"
-            await cursor.execute(query, (member_id, date[:4] if date else None, date[5:7] if date else None))
+            await cursor.execute(query, (member_id, date.year if date else None, date.month if date else None))
             result = await cursor.fetchall()
             feelings = [row['feeling'] for row in result]
 
