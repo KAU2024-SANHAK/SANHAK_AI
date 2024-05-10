@@ -177,6 +177,7 @@ async def get_diary_feelings(request: Request):
             diary_content = await cursor.fetchone()
 
             diary_content = diary_content['content']
+            print(diary_content)
 
         new_diary = diary(
             diary_content = None,
@@ -189,7 +190,8 @@ async def get_diary_feelings(request: Request):
 
         await new_diary.get_diary_feeling()
         # feeling이 null인 경우를 처리합니다.
-        feeling = await new_diary.get_diary_data("feeling") if await new_diary.get_diary_data("feeling") else ""
+        feeling = await new_diary.get_diary_data("feeling")
+        print(feeling)
 
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
