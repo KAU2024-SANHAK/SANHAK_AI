@@ -143,7 +143,8 @@ async def get_api_diary_create(request: Request):
                 "title": title,
                 "diaryContent": diary_content,
                 "feeling": feeling,
-                "writed_at": time.strftime("%Y-%m-%d %H:%M:%S")
+                "writed_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "imageurl": image
             }
     }
 
