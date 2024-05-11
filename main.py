@@ -109,9 +109,11 @@ async def get_api_diary_create(request: Request):
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
             content = await new_diary.get_diary_data("content")
-            query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`feeling`, `member_id`) "
-                     "VALUES (%s, %s, %s, %s, %s)")
-            await cursor.execute(query, (title, content, time, feeling, member_id))
+            image = ("https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/1946abd0-6493-4205-b3af-f9cd3172a655"
+                     "-react.png")
+            query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`feeling`, `member_id`, `imageurl`) "
+                     "VALUES (%s, %s, %s, %s, %s, %s)")
+            await cursor.execute(query, (title, content, time, feeling, member_id, image))
             diary_id = cursor.lastrowid
 
             await conn.commit()
