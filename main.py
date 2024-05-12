@@ -184,7 +184,14 @@ async def get_diary_feelings(request: Request):
             print(diary_content)
 
         new_diary = diary(
-            diary_content = None,
+            diary_content = diary.diary_content(
+                feeling = None,
+                when = None,
+                where = None,
+                who = None,
+                what = None,
+                realized = None
+            ),
             metadata=None,
             content=diary_content,
             title=None,
@@ -193,7 +200,6 @@ async def get_diary_feelings(request: Request):
         )
 
         await new_diary.get_diary_feeling()
-        # feeling이 null인 경우를 처리합니다.
         feeling = await new_diary.get_diary_data("feeling")
         if feeling is None:
             return {
