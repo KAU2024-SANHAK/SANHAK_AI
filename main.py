@@ -98,10 +98,10 @@ async def get_api_diary_create(request: Request):
 
     if await new_diary.get_diary_data("feeling") is None:
         await get_diary_feelings()
-        feeling = await new_diary.get_diary_data("feeling")
+        feeling = await new_diary.get_diary_data("feelings")
         print("1번", feeling)
     else:
-        feeling = await new_diary.get_diary_data("feeling")
+        feeling = await new_diary.get_diary_data("feelings")
         print("2번", feeling)
 
     time = datetime.datetime.now()
