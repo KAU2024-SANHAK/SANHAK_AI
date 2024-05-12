@@ -88,6 +88,7 @@ class diary:
 
         self.content = diary
         self.title = title
+        print(self.content)
         self.updated_at = datetime.datetime.now().isoformat()
 
 
