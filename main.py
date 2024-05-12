@@ -94,6 +94,7 @@ async def get_api_diary_create(request: Request):
         feelings=data.get('feeling')
     )
 
+    print(new_diary.diary_content.feeling)
     await new_diary.get_diary_completion()
 
     if await new_diary.get_diary_data("feelings") is None:
