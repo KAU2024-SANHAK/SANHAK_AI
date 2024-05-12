@@ -9,9 +9,11 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
+
 class diary:
     async def change_feeling(self, feeling):
-        feelings = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED", "평온": "RELAXED"}.get(feeling, None)
+        feelings = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED", "평온": "RELAXED"}.get(
+            feeling, None)
         return feelings
 
     class metadata:
@@ -32,9 +34,9 @@ class diary:
             self.who = who
             self.what = what
             self.realized = realized
+
         async def get_diary_content(self, attributes):
             return getattr(self, attributes, None)
-
 
     def __init__(self, diary_content, metadata, content, title, spicy_advice, soft_advice):
         self.diary_content = diary_content
@@ -53,7 +55,6 @@ class diary:
                 return await self.metadata.get_metadata(attributes)
             else:
                 return await self.diary_content.get_diary_content(attributes)
-
 
     async def get_diary_completion(self):
 
@@ -86,13 +87,11 @@ class diary:
         self.title = title
         self.metadata.updated_at = datetime.datetime.now().isoformat()
 
-
     async def is_feeling_empty(self):
         if await self.get_diary_data("feeling") == None:
             return False
         else:
             return True
-
 
     async def get_diary_feeling(self):
         prompt = (Prompt.diary_feeling_prompt % await self.get_diary_data("content"))
@@ -107,7 +106,9 @@ class diary:
         )
 
         content = completion.choices[0].message.content
+        print(content)
         self.diary_content.feeling = await self.change_feeling(content)
+
         print(self.diary_content.feeling)
 
     async def get_diary_advice(self):
