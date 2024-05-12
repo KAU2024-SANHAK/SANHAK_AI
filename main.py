@@ -149,7 +149,7 @@ async def get_api_diary_create(request: Request):
     }
 
 
-@app.post('/api/ai/diary/feelings')
+@app.post('/api/ai/diary/feeling')
 async def get_diary_feelings(request: Request):
     conn = await connect_mysql()
     if conn is None:
