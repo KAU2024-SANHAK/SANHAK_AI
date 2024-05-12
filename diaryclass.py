@@ -43,17 +43,18 @@ class diary:
         async def get_diary_content(self, attributes):
             return getattr(self, attributes, None)
 
-    def __init__(self, diary_content, metadata, content, title, spicy_advice, soft_advice):
+    def __init__(self, diary_content, metadata, content, title, spicy_advice, soft_advice, feelings):
         self.diary_content = diary_content
         self.metadata = metadata
         self.content = content
         self.title = title
         self.spicy_advice = spicy_advice
         self.soft_advice = soft_advice
+        self.feelings = feelings
         self.client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     async def get_diary_data(self, attributes):
-        if attributes in ["content", "title", "spicy_advice", "soft_advice", "client"]:
+        if attributes in ["content", "title", "spicy_advice", "soft_advice", "client", "feelings"]:
             return getattr(self, attributes, None)
         else:
             if attributes == "metadata":
@@ -113,9 +114,7 @@ class diary:
         )
 
         content = completion.choices[0].message.content
-        content = await self.change_feeling(content)
-        await self.diary_content.update_feeling(content)
-        print(await self.get_diary_data("feeling"))
+        self.feelings = await self.change_feeling(content)
 
     async def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % await self.get_diary_data("content"))
