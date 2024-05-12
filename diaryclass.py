@@ -53,8 +53,12 @@ class diary:
         else:
             if attributes == "metadata":
                 return await self.metadata.get_metadata(attributes)
+            elif attributes == "diary_content":
+                content_data = {attr: getattr(self.diary_content, attr, None) for
+                                attr in ["feeling", "when", "where", "who", "what", "realized"]}
+                return content_data.get(attributes, None)
             else:
-                return await self.diary_content.get_diary_content(attributes)
+                return None
 
     async def get_diary_completion(self):
 
@@ -108,7 +112,6 @@ class diary:
         content = completion.choices[0].message.content
         print(content)
         self.diary_content.feeling = await self.change_feeling(content)
-
         print(self.diary_content.feeling)
 
     async def get_diary_advice(self):
