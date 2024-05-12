@@ -56,6 +56,7 @@ class diary:
             elif attributes == "diary_content":
                 content_data = {attr: getattr(self.diary_content, attr, None) for
                                 attr in ["feeling", "when", "where", "who", "what", "realized"]}
+                print(content_data)
                 return content_data.get(attributes, None)
             else:
                 return None
