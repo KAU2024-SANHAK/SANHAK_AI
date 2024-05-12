@@ -90,17 +90,18 @@ async def get_api_diary_create(request: Request):
         content=None,
         title=None,
         spicy_advice=None,
-        soft_advice=None
+        soft_advice=None,
+        feelings=None
     )
 
     await new_diary.get_diary_completion()
 
     if await new_diary.get_diary_data("feeling") is None:
         await get_diary_feelings()
-        feeling = await new_diary.get_diary_data("feeling")
+        feeling = await new_diary.get_diary_data("feelings")
         print("1번", feeling)
     else:
-        feeling = await new_diary.get_diary_data("feeling")
+        feeling = await new_diary.get_diary_data("feelings")
         print("2번", feeling)
 
     time = datetime.datetime.now()
@@ -189,21 +190,22 @@ async def get_diary_feelings(request: Request):
             content=diary_content,
             title=None,
             spicy_advice=None,
-            soft_advice=None
+            soft_advice=None,
+            feelings=None
         )
 
         await new_diary.get_diary_feeling()
-        feeling = await new_diary.get_diary_data("feeling")
-        if feeling is None:
+        feelings = await new_diary.get_diary_data("feelings")
+        if feelings is None:
             return {
                 "status": 400,
                 "message": "감정 분석에 실패했습니다."
             }
-        print(feeling)
+        print(feelings)
 
         async with conn.cursor() as cursor:
             query = "UPDATE diary SET feeling = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (feeling, member_id, dairy_id))
+            await cursor.execute(query, (feelings, member_id, dairy_id))
         await conn.commit()
 
     except Exception as e:
@@ -223,7 +225,7 @@ async def get_diary_feelings(request: Request):
         "status": 201,
         "message": "요청이 성공했습니다.",
         "data": {
-            "feeling": feeling
+            "feeling": feelings
         }
     }
 
@@ -264,7 +266,8 @@ async def get_diary_advice(request: Request):
             content=diary_content,
             title=None,
             spicy_advice=None,
-            soft_advice=None
+            soft_advice=None,
+            feelings=None
         )
 
         await new_diary.get_diary_advice()
