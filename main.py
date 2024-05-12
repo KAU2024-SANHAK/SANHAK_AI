@@ -109,8 +109,8 @@ async def get_api_diary_create(request: Request):
         async with conn.cursor() as cursor:
             title = await new_diary.get_diary_data("title")
             content = await new_diary.get_diary_data("content")
-            image = ("https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/1946abd0-6493-4205-b3af-f9cd3172a655"
-                     "-react.png")
+            image = ("https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/5e390f1b-b463-4bba-9f22-f18d9914259c"
+                     "-%E1%84%8B%E1%85%AE%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8D%E1%85%A1%E1%86%AF.jpeg")
             query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`feeling`, `member_id`, `imageurl`) "
                      "VALUES (%s, %s, %s, %s, %s, %s)")
             await cursor.execute(query, (title, content, time, feeling, member_id, image))
