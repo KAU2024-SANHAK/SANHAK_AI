@@ -113,8 +113,9 @@ class diary:
         )
 
         content = completion.choices[0].message.content
+        content = self.change_feeling(content)
         await self.diary_content.update_feeling(content)
-        print(self.diary_content.feeling)
+        print(self.get_diary_data("feeling"))
 
     async def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % await self.get_diary_data("content"))
