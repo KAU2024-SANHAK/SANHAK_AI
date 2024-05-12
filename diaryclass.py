@@ -52,12 +52,11 @@ class diary:
         if attributes in ["content", "title", "spicy_advice", "soft_advice", "client", "feelings"]:
             return getattr(self, attributes, None)
         else:
-            if attributes == "metadata":
+            if attributes in ["member_id", "created_at", "updated_at", "diarytype"]:
                 return await self.metadata.get_metadata(attributes)
-            elif attributes == "diary_content":
-                return await self.diary_content.get_diary_content(attributes)
             else:
-                return None
+                return await self.diary_content.get_diary_content(attributes)
+
 
     async def get_diary_completion(self):
 
@@ -88,7 +87,6 @@ class diary:
 
         self.content = diary
         self.title = title
-        print(self.content)
         self.updated_at = datetime.datetime.now().isoformat()
 
 
