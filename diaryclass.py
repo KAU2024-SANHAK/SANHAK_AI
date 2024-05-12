@@ -35,11 +35,6 @@ class diary:
             self.what = what
             self.realized = realized
 
-        async def update_feeling(self, new_feeling):
-            feelings_dict = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED",
-                             "평온": "RELAXED"}
-            self.feeling = feelings_dict.get(new_feeling, self.feeling)  # 기본값으로 현재 feeling을 유지
-
         async def get_diary_content(self, attributes):
             return getattr(self, attributes, None)
 
@@ -93,13 +88,8 @@ class diary:
 
         self.content = diary
         self.title = title
-        self.metadata.updated_at = datetime.datetime.now().isoformat()
+        self.updated_at = datetime.datetime.now().isoformat()
 
-    async def is_feeling_empty(self):
-        if await self.get_diary_data("feeling") == None:
-            return False
-        else:
-            return True
 
     async def get_diary_feeling(self):
         prompt = (Prompt.diary_feeling_prompt % await self.get_diary_data("content"))

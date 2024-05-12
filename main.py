@@ -91,12 +91,12 @@ async def get_api_diary_create(request: Request):
         title=None,
         spicy_advice=None,
         soft_advice=None,
-        feelings=None
+        feelings=data.get('feeling')
     )
 
     await new_diary.get_diary_completion()
 
-    if await new_diary.get_diary_data("feeling") is None:
+    if await new_diary.get_diary_data("feelings") is None:
         await get_diary_feelings()
         feeling = await new_diary.get_diary_data("feelings")
         print("1번", feeling)
