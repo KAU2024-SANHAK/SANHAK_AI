@@ -195,6 +195,11 @@ async def get_diary_feelings(request: Request):
         await new_diary.get_diary_feeling()
         # feeling이 null인 경우를 처리합니다.
         feeling = await new_diary.get_diary_data("feeling")
+        if feeling is None:
+            return {
+                "status": 400,
+                "message": "감정 분석에 실패했습니다."
+            }
         print(feeling)
 
         async with conn.cursor() as cursor:
