@@ -35,6 +35,11 @@ class diary:
             self.what = what
             self.realized = realized
 
+        async def update_feeling(self, new_feeling):
+            feelings_dict = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED",
+                             "평온": "RELAXED"}
+            self.feeling = feelings_dict.get(new_feeling, self.feeling)  # 기본값으로 현재 feeling을 유지
+
         async def get_diary_content(self, attributes):
             return getattr(self, attributes, None)
 
@@ -54,10 +59,7 @@ class diary:
             if attributes == "metadata":
                 return await self.metadata.get_metadata(attributes)
             elif attributes == "diary_content":
-                content_data = {attr: getattr(self.diary_content, attr, None) for
-                                attr in ["feeling", "when", "where", "who", "what", "realized"]}
-                print(content_data)
-                return content_data.get(attributes, None)
+                return await self.diary_content.get_diary_content(attributes)
             else:
                 return None
 
@@ -112,8 +114,7 @@ class diary:
 
         content = completion.choices[0].message.content
         print(content)
-        self.diary_content.feeling = await self.change_feeling(content)
-        print(self.diary_content.feeling)
+        await self.diary_content.update_feeling(content)
 
     async def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % await self.get_diary_data("content"))
