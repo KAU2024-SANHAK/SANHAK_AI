@@ -84,7 +84,7 @@ class diary:
 
         self.content = diary
         self.title = title
-        self.updated_at = datetime.datetime.now().isoformat()
+        self.metadata.updated_at = datetime.datetime.now().isoformat()
 
 
     async def is_feeling_empty(self):
@@ -107,7 +107,7 @@ class diary:
         )
 
         content = completion.choices[0].message.content
-        self.feeling = await self.change_feeling(content)
+        self.diary_content.feeling = await self.change_feeling(content)
 
     async def get_diary_advice(self):
         prompt = (Prompt.diary_advice_prompt % await self.get_diary_data("content"))

@@ -184,14 +184,7 @@ async def get_diary_feelings(request: Request):
             print(diary_content)
 
         new_diary = diary(
-            diary_content = diary.diary_content(
-                feeling = None,
-                when = None,
-                where = None,
-                who = None,
-                what = None,
-                realized = None
-            ),
+            diary_content = None,
             metadata=None,
             content=diary_content,
             title=None,
