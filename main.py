@@ -161,6 +161,7 @@ async def get_diary_feelings(request: Request):
     member_id = request.headers.get('Authorization')
     dairy_id = data.get('diaryId')
 
+    print(member_id, dairy_id)
     if member_id is None:
         return {
             "status": 401,
