@@ -105,10 +105,10 @@ async def get_api_diary_create(request: Request):
         )
         await new_feeling.get_diary_feeling()
 
-        feeling = await new_feeling.feeling
+        feeling = new_feeling.feeling
         print("1번", feeling)
     else:
-        feeling = await new_diary.diary_data["feeling"]
+        feeling = new_diary.diary_data["feeling"]
         print("2번", feeling)
 
 
@@ -206,7 +206,7 @@ async def get_diary_feelings(request: Request):
         )
 
         await new_feeling.get_diary_feeling()
-        feelings = await new_feeling.feeling
+        feelings = new_feeling.feeling
         if feelings is None:
             return {
                 "status": 400,
@@ -282,8 +282,8 @@ async def get_diary_advice(request: Request):
         await new_advice.get_diary_advice()
 
         async with conn.cursor() as cursor:
-            soft_advice = await new_advice.soft_advice
-            spicy_advice = await new_advice.spicy_advice
+            soft_advice = new_advice.soft_advice
+            spicy_advice = new_advice.spicy_advice
 
             query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
             await cursor.execute(query, (soft_advice, spicy_advice))
@@ -295,8 +295,8 @@ async def get_diary_advice(request: Request):
 
          # adviceId, spicy, kind가 null인 경우를 처리합니다.
         advice_id = advice_id if advice_id is not None else 0
-        spicy_advice = await new_advice.spicy_advice if await new_advice.spicy_advice else ""
-        soft_advice = await new_advice.soft_advice if await new_advice.soft_advice else ""
+        spicy_advice = new_advice.spicy_advice if new_advice.spicy_advice else ""
+        soft_advice = new_advice.soft_advice if new_advice.soft_advice else ""
 
     except Exception as e:
         error_message = str(e)
