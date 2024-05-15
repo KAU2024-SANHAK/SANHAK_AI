@@ -20,6 +20,10 @@ class Diary:
         self.client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     async def get_diary_data(self, attributes):
+        if attributes in ["member_id", "created_at", "updated_at", "written_at"]:
+            return getattr(self, attributes, None)
+        else:
+            return None
 
 
 
