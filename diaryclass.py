@@ -12,7 +12,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 class diary:
     async def change_feeling(self, feeling):
-        feelings = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRY", "놀람": "SURPRISED", "평온": "RELAXED"}.get(
+        feelings = {"기쁨": "HAPPY", "슬픔": "SAD", "분노": "ANGRY", "걱정": "WORRIED", "놀람": "SURPRISED", "평온": "RELAX"}.get(
             feeling, None)
         return feelings
 
