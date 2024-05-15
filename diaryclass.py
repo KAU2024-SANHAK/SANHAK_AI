@@ -20,10 +20,7 @@ class Diary:
         self.client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     async def get_diary_data(self, attributes):
-        if attributes in ["member_id", "created_at", "updated_at", "written_at"]:
-            return getattr(self, attributes, None)
-        else:
-            return None
+
 
 
 class DiaryCompletion(Diary):
@@ -69,6 +66,14 @@ class DiaryCompletion(Diary):
 
         self.content = diary
         self.title = title
+        print(self.title)
+
+
+    async def get_completion_data(self, attributes):
+        if attributes in ["content", "title", "diary_data"]:
+            return getattr(self, attributes, None)
+        else:
+            return None
 
 
 class DiaryFeeling(Diary):
@@ -105,6 +110,11 @@ class DiaryFeeling(Diary):
         contents = completion.choices[0].message.content
         self.feeling = await self.change_feeling(contents)
 
+    async def get_feeling_data(self, attributes):
+        if attributes in ["feeling", "content"]:
+            return getattr(self, attributes, None)
+        else:
+            return None
 
 class DiaryAdvice(Diary):
     def __init__(self, member_id, created_at, updated_at, written_at, content):
@@ -131,3 +141,9 @@ class DiaryAdvice(Diary):
 
         self.spicy_advice = content['T comment']
         self.soft_advice = content['F comment']
+
+    async def get_advice_data(self, attributes):
+        if attributes in ["spicy_advice", "soft_advice", "content"]:
+            return getattr(self, attributes, None)
+        else:
+            return None
