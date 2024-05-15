@@ -1,7 +1,7 @@
 import aiomysql
 import traceback
 import datetime
-from diaryclass import diary
+import diaryclass as diary
 from collections import defaultdict
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
@@ -77,53 +77,64 @@ async def get_api_diary_create(request: Request):
             "message": "헤더에 memberId가 없습니다."
         }
 
-    new_diary = diary(
-        diary_content = diary.diary_content(
-            feeling = data.get('feeling'),
-            when = data.get('when'),
-            where = data.get('where'),
-            who = data.get('who'),
-            what = data.get('what'),
-            realized = data.get('realized')
-        ),
-        metadata=None,
-        content=None,
-        title=None,
-        spicy_advice=None,
-        soft_advice=None,
-        feelings=data.get('feeling')
+    new_diary = diary.DiaryCompletion(
+        member_id=member_id,
+        created_at=None,
+        updated_at=None,
+        written_at=None,
+        when=data.get('when'),
+        where=data.get('where'),
+        who=data.get('who'),
+        what=data.get('what'),
+        realized=data.get('realized'),
+        feeling=data.get('feeling')
     )
 
     await new_diary.get_diary_completion()
+    new_diary.created_at = datetime.datetime.now()
+    new_diary.updated_at = datetime.datetime.now()
+    new_diary.written_at = datetime.datetime.now()
 
-    if await new_diary.get_diary_data("feelings") is None:
-        await get_diary_feelings()
-        feeling = await new_diary.get_diary_data("feelings")
+    if await new_diary.get_diary_data("feeling") is None:
+        new_feeling = diary.DiaryFeeling(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=new_diary.content
+        )
+        await new_feeling.get_diary_feeling()
+
+        feeling = new_feeling.feeling
         print("1번", feeling)
     else:
-        feeling = await new_diary.get_diary_data("feelings")
+        feeling = new_diary.diary_data["feeling"]
         print("2번", feeling)
 
-    time = datetime.datetime.now()
 
     try:
         async with conn.cursor() as cursor:
-            title = await new_diary.get_diary_data("title")
-            content = await new_diary.get_diary_data("content")
+            title = new_diary.title
+            content = new_diary.content
+            writed_at = new_diary.written_at
+            updated_at = new_diary.updated_at
+            created_at = new_diary.created_at
             image = ("https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/"
                      "dcb22ba3-b562-4c60-83ad-2814c7d07dca-"
                      "%E1%84%92%E1%85%A5%E1%84%82%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%85%E1%85%B5%E1%84%89%E1%85%A5%E1%"
                      "84%87%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%8D%E1%85%A1.png")
-            query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`feeling`, `member_id`, `imageurl`) "
-                     "VALUES (%s, %s, %s, %s, %s, %s)")
-            await cursor.execute(query, (title, content, time, feeling, member_id, image))
+            query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`created_at`,"
+                     "`updated_at`, `feeling`, `member_id`, `imageurl`) "
+                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+            await cursor.execute(query, (title, content, writed_at, created_at,
+                                         updated_at, feeling, member_id, image))
             diary_id = cursor.lastrowid
 
             await conn.commit()
 
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
-        diary_content = await new_diary.get_diary_data("content") if await new_diary.get_diary_data("content") else ""
+
 
     except Exception as e:
         error_message = str(e)
@@ -144,9 +155,9 @@ async def get_api_diary_create(request: Request):
             "data": {
                 "diaryId": diary_id,
                 "title": title,
-                "diaryContent": diary_content,
+                "diaryContent": content,
                 "feeling": feeling,
-                "writed_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "writed_at": writed_at,
                 "imageurl": image
             }
     }
@@ -186,18 +197,16 @@ async def get_diary_feelings(request: Request):
             diary_content = diary_content['content']
             print(diary_content)
 
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None,
-            feelings=None
+        new_feeling = diary.DiaryFeeling(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=diary_content
         )
 
-        await new_diary.get_diary_feeling()
-        feelings = await new_diary.get_diary_data("feelings")
+        await new_feeling.get_diary_feeling()
+        feelings = new_feeling.feeling
         if feelings is None:
             return {
                 "status": 400,
@@ -262,34 +271,32 @@ async def get_diary_advice(request: Request):
             await cursor.execute(query, (member_id, dairy_id))
         diary_content = await cursor.fetchone()
 
-        new_diary = diary(
-            diary_content = None,
-            metadata=None,
-            content=diary_content,
-            title=None,
-            spicy_advice=None,
-            soft_advice=None,
-            feelings=None
+        new_advice = diary.DiaryAdvice(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=diary_content['content']
         )
 
-        await new_diary.get_diary_advice()
+        await new_advice.get_diary_advice()
 
         async with conn.cursor() as cursor:
-            soft_advice = await new_diary.get_diary_data("soft_advice")
-            spicy_advice = await new_diary.get_diary_data("spicy_advice")
+            soft_advice = new_advice.soft_advice
+            spicy_advice = new_advice.spicy_advice
 
             query = "INSERT INTO advice (kind_advice, spicy_advice) VALUES (%s, %s)"
             await cursor.execute(query, (soft_advice, spicy_advice))
-            adviceid = cursor.lastrowid
+            advice_id = cursor.lastrowid
             query = "UPDATE diary SET advice_id = %s WHERE member_id = %s AND diary_id = %s"
-            await cursor.execute(query, (adviceid, member_id, dairy_id))
+            await cursor.execute(query, (advice_id, member_id, dairy_id))
         await conn.commit()
 
 
          # adviceId, spicy, kind가 null인 경우를 처리합니다.
-        advice_id = adviceid if adviceid is not None else 0
-        spicy_advice = await new_diary.get_diary_data("spicy_advice") if await new_diary.get_diary_data("spicy_advice") else ""
-        soft_advice = await new_diary.get_diary_data("soft_advice") if await new_diary.get_diary_data("soft_advice") else ""
+        advice_id = advice_id if advice_id is not None else 0
+        spicy_advice = new_advice.spicy_advice if new_advice.spicy_advice else ""
+        soft_advice = new_advice.soft_advice if new_advice.soft_advice else ""
 
     except Exception as e:
         error_message = str(e)
