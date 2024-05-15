@@ -69,7 +69,6 @@ class DiaryCompletion(Diary):
 
         self.content = diary
         self.title = title
-        self.written_at, self.updated_at, self.created_at = datetime.datetime.now().isoformat()
 
 
 class DiaryFeeling(Diary):
