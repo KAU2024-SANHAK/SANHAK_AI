@@ -101,7 +101,7 @@ async def get_api_diary_create(request: Request):
             created_at=None,
             updated_at=None,
             written_at=None,
-            content=await new_diary.get_diary_data("content")
+            content=new_diary.content
         )
         await new_feeling.get_diary_feeling()
 
@@ -134,7 +134,7 @@ async def get_api_diary_create(request: Request):
 
             # diary_id와 diaryContent가 null 값인지 확인하여 처리합니다.
         diary_id = diary_id if diary_id is not None else 0
-        content = await new_diary.get_diary_data("content") if await new_diary.get_diary_data("content") else ""
+
 
     except Exception as e:
         error_message = str(e)
