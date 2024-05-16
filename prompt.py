@@ -142,3 +142,22 @@ diary_advice_prompt = """
                 당신을 진정으로 아끼는 친구라면 당신의 솔직한 마음을 이해해줄거에요."
     }
 """
+
+diary_image_prompt = """
+유저의 diary 내용 : %s
+
+유저의 diary 내용을 바탕으로 이미지를 생성해주세요.
+
+주된 색상은 다음과 같은 계열의 색상을 사용해주세요 
+[Background Pink #FFBBCB, Dark Pink #FF7575, Btn Hover Pink #FFA8BC, Warm Pink #FFA2A2,
+Dark Gray #CBC7C7, White Gray #D9D9D9, Text Gray #858585]
+특히 감정별로 아래와 같은 계열의 색상을 주로 사용해주세요.
+[Happy : Yellow #FFF1A8, Sad Blue#B4F2FF, Relax Green #B9FFB3, Worried Purple #C3C9FF,
+Surprised Orange #FFCA99, Angry Pink #FFB6B6]
+
+이미지는 일러스트 느낌으 3D 보다는 평면적인 2D 이미지로 제작해주세요.
+아래 캐릭터를 사용해 이미지를 제작해주고 이와 비슷한 느낌의 이미지로 제작해주세요.
+캐릭터 : https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/8dd769c3-4759-4e58-b185-74bf1eca92e5-KakaoTalk_Photo_2024-05-11-17-21-29%20004.png
+
+이미지는 유저의 diary 내용을 바탕으로 작성해주세요.
+"""
