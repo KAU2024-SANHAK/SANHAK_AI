@@ -138,7 +138,7 @@ class DiaryImage(Diary):
         self.content = content
 
     async def get_diary_image(self):
-        prompts = Prompt.diary_image_prompt.fromat(self.content)
+        prompts = Prompt.diary_image_prompt.format(self.content)
 
         client = self.client
         completion = client.images.generate(
