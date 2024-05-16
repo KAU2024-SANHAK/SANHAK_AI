@@ -148,16 +148,15 @@ diary_image_prompt = """
 
 유저의 diary 내용을 바탕으로 이미지를 생성해주세요.
 
-주된 색상은 다음과 같은 계열의 색상을 사용해주세요 
-[Background Pink #FFBBCB, Dark Pink #FF7575, Btn Hover Pink #FFA8BC, Warm Pink #FFA2A2,
-Dark Gray #CBC7C7, White Gray #D9D9D9, Text Gray #858585]
-특히 감정별로 아래와 같은 계열의 색상을 주로 사용해주세요.
-[Happy : Yellow #FFF1A8, Sad Blue#B4F2FF, Relax Green #B9FFB3, Worried Purple #C3C9FF,
-Surprised Orange #FFCA99, Angry Pink #FFB6B6]
+이미지는 평면적인 2D 일러스트 스타일로, 유저의 감정을 반영하여 다음과 같은 색상을 주로 사용해주세요.
+- 행복한 감정: 밝은 노란색과 분홍색
+- 슬픈 감정: 파란색 계열
+- 안정된 감정: 녹색 계열
+- 걱정되는 감정: 보라색
+- 놀란 감정: 오렌지색
+- 화난 감정: 분홍색
 
-이미지는 일러스트 느낌으 3D 보다는 평면적인 2D 이미지로 제작해주세요.
-아래 캐릭터를 사용해 이미지를 제작해주고 이와 비슷한 느낌의 이미지로 제작해주세요.
-캐릭터 : https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/8dd769c3-4759-4e58-b185-74bf1eca92e5-KakaoTalk_Photo_2024-05-11-17-21-29%20004.png
+캐릭터는 꿀법 옷을 입고있는 곰을 모티브로 한 일러스트로, 사용자의 diary 내용에 맞는 포즈와 표정을 취하도록 해주세요.
 
-이미지는 유저의 diary 내용을 바탕으로 작성해주세요.
+다양한 요소들을 추가하기보단 불필요한 것들을 빼고 단조로운 스타일로 생성해주세요
 """
