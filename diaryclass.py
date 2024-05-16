@@ -138,13 +138,13 @@ class DiaryImage(Diary):
         self.content = content
 
     async def get_diary_image(self):
-        prompt = (Prompt.diary_image_prompt %
-                  self.content)
+        prompts = (Prompt.diary_image_prompt %
+                   self.content)
 
         client = self.client
         completion = client.images.generate(
             model="dall-e-3",
-            prompt=prompt,
+            prompt=prompts,
             size="1024x1024",
             n=1
         )
