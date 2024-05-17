@@ -111,6 +111,15 @@ async def get_api_diary_create(request: Request):
         feeling = new_diary.diary_data["feeling"]
         print("2번", feeling)
 
+    new_image = diary.DiaryImage(
+        member_id=member_id,
+        created_at=None,
+        updated_at=None,
+        written_at=None,
+        content=new_diary.content
+    )
+    await new_image.get_diary_image()
+
 
     try:
         async with conn.cursor() as cursor:
@@ -119,10 +128,7 @@ async def get_api_diary_create(request: Request):
             writed_at = new_diary.written_at
             updated_at = new_diary.updated_at
             created_at = new_diary.created_at
-            image = ("https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/"
-                     "dcb22ba3-b562-4c60-83ad-2814c7d07dca-"
-                     "%E1%84%92%E1%85%A5%E1%84%82%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%85%E1%85%B5%E1%84%89%E1%85%A5%E1%"
-                     "84%87%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%8D%E1%85%A1.png")
+            image = new_image.image
             query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`created_at`,"
                      "`updated_at`, `feeling`, `member_id`, `imageurl`) "
                      "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
@@ -390,6 +396,76 @@ async def get_diary_summary(request: Request):
         }
     }
 
+
+@app.get('/api/ai/diary/image')
+async def get_diary_image(request: Request):
+    conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
+    member_id = request.headers.get('Authorization')
+    data = await request.json()
+    dairy_id = data.get('diaryId')
+
+    if member_id is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
+    if dairy_id is None:
+        return {
+            "status": 400,
+            "message": "일기 ID가 없습니다."
+        }
+
+    try:
+        async with conn.cursor() as cursor:
+            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
+            await cursor.execute(query, (member_id, dairy_id))
+            content = await cursor.fetchone()
+            content = content['content']
+
+        new_image = diary.DiaryImage(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=content
+        )
+
+        await new_image.get_diary_image()
+
+        image = new_image.image
+
+        async with conn.cursor() as cursor:
+            query = "UPDATE diary SET imageurl = %s WHERE member_id = %s AND diary_id = %s"
+            await cursor.execute(query, (image, member_id, dairy_id))
+        await conn.commit()
+
+    except Exception as e:
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
+
+    finally:
+        conn.close()
+
+    return {
+        "status": 201,
+        "message": "요청이 성공했습니다.",
+        "data": {
+            "diaryId": dairy_id,
+            "image_url": image
+        }
+    }
 
 
 if __name__ == '__main__':

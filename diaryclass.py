@@ -23,7 +23,6 @@ class Diary:
         return getattr(self, attributes, None)
 
 
-
 class DiaryCompletion(Diary):
     def __init__(self, member_id, created_at, updated_at, written_at,
                  when, where, who, what, realized, feeling):
@@ -55,7 +54,7 @@ class DiaryCompletion(Diary):
                 {"role": "user", "content": prompt},
             ],
             temperature=0.7,
-            max_tokens=450
+            max_tokens=300
         )
 
         content = completion.choices[0].message.content
@@ -68,7 +67,6 @@ class DiaryCompletion(Diary):
         self.content = diary
         self.title = title
         print(self.title)
-
 
 
 class DiaryFeeling(Diary):
@@ -131,3 +129,23 @@ class DiaryAdvice(Diary):
 
         self.spicy_advice = content['T comment']
         self.soft_advice = content['F comment']
+
+
+class DiaryImage(Diary):
+    def __init__(self, member_id, created_at, updated_at, written_at, content):
+        super().__init__(member_id, created_at, updated_at, written_at)
+        self.image = None
+        self.content = content
+
+    async def get_diary_image(self):
+        prompts = Prompt.diary_image_prompt % self.content
+
+        client = self.client
+        completion = client.images.generate(
+            model="dall-e-3",
+            prompt=prompts,
+            size="1024x1024",
+            n=1
+        )
+
+        self.image = completion.data[0].url
