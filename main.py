@@ -397,6 +397,76 @@ async def get_diary_summary(request: Request):
     }
 
 
+@app.get('/api/ai/diary/image')
+async def get_diary_image(request: Request):
+    conn = await connect_mysql()
+    if conn is None:
+        return {
+            "status": 500,
+            "message": "MySQL 연결에 실패했습니다."
+        }
+    member_id = request.headers.get('Authorization')
+    data = await request.json()
+    dairy_id = data.get('diaryId')
+
+    if member_id is None:
+        return {
+            "status": 401,
+            "message": "토큰이 없습니다."
+        }
+
+    if dairy_id is None:
+        return {
+            "status": 400,
+            "message": "일기 ID가 없습니다."
+        }
+
+    try:
+        async with conn.cursor() as cursor:
+            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
+            await cursor.execute(query, (member_id, dairy_id))
+            content = await cursor.fetchone()
+            content = content['content']
+
+        new_image = diary.DiaryImage(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=content
+        )
+
+        await new_image.get_diary_image()
+
+        image = new_image.image
+
+        async with conn.cursor() as cursor:
+            query = "UPDATE diary SET imageurl = %s WHERE member_id = %s AND diary_id = %s"
+            await cursor.execute(query, (image, member_id, dairy_id))
+        await conn.commit()
+
+    except Exception as e:
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return {
+            "status": 500,
+            "message": "요청이 실패했습니다.",
+            "error": error_message,
+            "traceback": traceback_message
+        }
+
+    finally:
+        conn.close()
+
+    return {
+        "status": 201,
+        "message": "요청이 성공했습니다.",
+        "data": {
+            "diaryId": dairy_id,
+            "image_url": image
+        }
+    }
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8080)
