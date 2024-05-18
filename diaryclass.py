@@ -149,3 +149,13 @@ class DiaryImage(Diary):
         )
 
         self.image = completion.data[0].url
+
+
+class YoutubePlaylist(Diary):
+    def __init__(self, member_id, created_at, updated_at, written_at, content):
+        super().__init__(member_id, created_at, updated_at, written_at)
+        self.playlist_url = None
+        self.playlist_title = None
+        self.thumbnail_url = None
+
+        self.content = content
