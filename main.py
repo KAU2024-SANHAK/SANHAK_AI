@@ -397,7 +397,7 @@ async def get_diary_summary(request: Request):
     }
 
 
-@app.get('/api/ai/diary/image')
+@app.post('/api/ai/diary/image')
 async def get_diary_image(request: Request):
     conn = await connect_mysql()
     if conn is None:
