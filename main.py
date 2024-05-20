@@ -111,15 +111,6 @@ async def get_api_diary_create(request: Request):
         feeling = new_diary.diary_data["feeling"]
         print("2번", feeling)
 
-    new_image = diary.DiaryImage(
-        member_id=member_id,
-        created_at=None,
-        updated_at=None,
-        written_at=None,
-        content=new_diary.content
-    )
-    await new_image.get_diary_image()
-
 
     try:
         async with conn.cursor() as cursor:
@@ -128,7 +119,7 @@ async def get_api_diary_create(request: Request):
             writed_at = new_diary.written_at
             updated_at = new_diary.updated_at
             created_at = new_diary.created_at
-            image = new_image.image
+            image = None
             query = ("INSERT INTO diary (`title`, `content`, `writed_at`,`created_at`,"
                      "`updated_at`, `feeling`, `member_id`, `imageurl`) "
                      "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
@@ -397,7 +388,7 @@ async def get_diary_summary(request: Request):
     }
 
 
-@app.get('/api/ai/diary/image')
+@app.post('/api/ai/diary/image')
 async def get_diary_image(request: Request):
     conn = await connect_mysql()
     if conn is None:
