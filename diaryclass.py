@@ -6,6 +6,7 @@ import os
 import prompt as Prompt
 from dotenv import load_dotenv
 from abc import ABC, abstractmethod
+from googleapiclient.discovery import build
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -149,3 +150,32 @@ class DiaryImage(Diary):
         )
 
         self.image = completion.data[0].url
+
+
+class YoutubePlaylist():
+    def __init__(self, content):
+        self.api_key = os.environ['YOUTUBE_API_KEY']
+        self.youtube = build('youtube', 'v3', developerKey=self.api_key)
+        self.content = content
+        self.playlist = None
+        self.title = None
+        self.thumbnail = None
+
+    async def get_youtube_playlist(self):
+        channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
+        query = "%s, %s" % (self.content, channel)
+        search_response = self.youtube.search().list(
+            q=query,
+            part="snippet",
+            type='video',
+            maxResults=1
+        ).execute()
+
+        for search_result in search_response.get("items", []):
+            if search_result["id"]["kind"] == "youtube#playlist":
+                self.playlist = f"https://www.youtube.com/watch?v={search_result['id']['videoId']}"
+                self.title = search_result["snippet"]["title"]
+                self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
+                break
+        return self.playlist, self.title, self.thumbnail
+
