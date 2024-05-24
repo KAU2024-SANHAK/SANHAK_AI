@@ -1,6 +1,10 @@
 flask
-openai
+openai~=1.9.0
 pymysql
-uvicorn
-fastapi
+uvicorn~=0.29.0
+fastapi~=0.111.0
 logger
+aiomysql~=0.2.0
+starlette~=0.37.2
+python-dotenv~=0.21.0
+googleapiclient~=2.0.2
