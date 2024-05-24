@@ -476,14 +476,8 @@ async def get_youtube_playlist(request: Request):
     if feeling is None:
         feeling = feelings['month feeling 2']
 
-
-
     new_playlist = diary.YoutubePlaylist(
-        member_id=member_id,
-        created_at=None,
-        updated_at=None,
-        written_at=None,
-        content=feeling
+        content = feeling
     )
 
     await new_playlist.get_youtube_playlist()
