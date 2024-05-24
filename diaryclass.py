@@ -5,9 +5,13 @@ from openai import OpenAI
 import os
 import prompt as Prompt
 from dotenv import load_dotenv
-from abc import ABC, abstractmethod
-from googleapiclient.discovery import build
 
+import sys
+file_path = os.path.dirname(__file__)
+module_path = os.path.join(file_path, "lib")
+sys.path.append(module_path)
+
+from googleapiclient.discovery import build
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
