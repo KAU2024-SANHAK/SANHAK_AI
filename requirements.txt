@@ -7,4 +7,4 @@ logger
 aiomysql~=0.2.0
 starlette~=0.37.2
 python-dotenv~=0.21.0
-google-api-python-client~=2.130.0
+google-api-python-client==2.130.0
