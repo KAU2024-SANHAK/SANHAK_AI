@@ -5,7 +5,8 @@ from openai import OpenAI
 import os
 import prompt as Prompt
 from dotenv import load_dotenv
-from googleapiclient.discovery import build
+
+#from googleapiclient.discovery import build
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
