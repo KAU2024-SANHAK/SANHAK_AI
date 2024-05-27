@@ -152,7 +152,7 @@ class DiaryImage(Diary):
         self.image = completion.data[0].url
 
 
-"""class YoutubePlaylist():
+class YoutubePlaylist():
     def __init__(self, content):
         self.api_key = os.environ['YOUTUBE_API_KEY']
         self.youtube = build('youtube', 'v3', developerKey=self.api_key)
@@ -178,4 +178,4 @@ class DiaryImage(Diary):
                 self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
                 break
         return self.playlist, self.title, self.thumbnail
-"""
+

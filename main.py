@@ -458,7 +458,7 @@ async def get_diary_image(request: Request):
         }
     }
 
-"""
+
 @app.post('/api/diary/youtube')
 async def get_youtube_playlist(request: Request):
 
@@ -496,7 +496,7 @@ async def get_youtube_playlist(request: Request):
         }
     }
 
-"""
+
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8080)
     
