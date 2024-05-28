@@ -5,8 +5,7 @@ from openai import OpenAI
 import os
 import prompt as Prompt
 from dotenv import load_dotenv
-
-#from googleapiclient.discovery import build
+from googleapiclient.discovery import build
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -155,7 +154,7 @@ class DiaryImage(Diary):
 class YoutubePlaylist():
     def __init__(self, content):
         self.api_key = os.environ['YOUTUBE_API_KEY']
-        self.youtube = build('youtube', 'v3', developerKey=self.api_key)
+        self.youtube_build = build('youtube', 'v3', developerKey=self.api_key)
         self.content = content
         self.playlist = None
         self.title = None
@@ -164,7 +163,7 @@ class YoutubePlaylist():
     async def get_youtube_playlist(self):
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
         query = "%s, %s" % (self.content, channel)
-        search_response = self.youtube.search().list(
+        search_response = self.youtube_build.search().list(
             q=query,
             part="snippet",
             type='video',
