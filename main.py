@@ -423,6 +423,32 @@ async def get_youtube_playlist(request: Request):
     }
 
 
+@app.get('/api/playlist/weather')
+async def get_weather_playlist(request: Request):
+    member_id = request.headers.get('Authorization')
+
+    if member_id is None:
+        return Response(status_code=401, content="토큰이 없습니다.")
+
+    new_playlist = diary.WeatherPlaylist()
+
+    await new_playlist.get_weather_playlist()
+
+    playlist_url = new_playlist.playlist
+    title = new_playlist.title
+    thumbnail = new_playlist.thumbnail
+
+    return {
+        "status": 200,
+        "message": "요청이 성공했습니다.",
+        "data": {
+            "title": title,
+            "playlist_url": playlist_url,
+            "thumbnail": thumbnail
+        }
+    }
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8080)
     

@@ -1,5 +1,5 @@
 import enum as Enum
-import datetime
+import requests
 import json
 from openai import OpenAI
 import os
@@ -192,3 +192,29 @@ class YoutubePlaylist():
                 break
         return self.playlist, self.title, self.thumbnail
 
+
+class WeatherPlaylist(YoutubePlaylist):
+    def __init__(self):
+        super().__init__(None)
+        self.weather = requests.get(os.environ['WEATHER_API_KEY'])
+        self.weather_json = json.loads(self.weather.text)
+        self.current_weather = self.weather_json['current']['condition']['text']
+
+    async def get_weather_playlist(self):
+        weather = self.current_weather
+        channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
+        query = "%s, %s" % (weather, channel)
+        search_response = self.youtube_build.search().list(
+            q=query,
+            part="snippet",
+            type='video',
+            maxResults=1
+        ).execute()
+
+        for search_result in search_response.get("items", []):
+            if search_result["id"]["kind"] == "youtube#video":
+                self.playlist = f"https://www.youtube.com/watch?v={search_result['id']['videoId']}"
+                self.title = search_result["snippet"]["title"]
+                self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
+                break
+        return self.playlist, self.title, self.thumbnail
