@@ -5,6 +5,7 @@ import diaryclass as diary
 from collections import defaultdict
 from fastapi import FastAPI, Request, HTTPException
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import Response
 import uvicorn
 import tracemalloc
 tracemalloc.start()
@@ -198,6 +199,8 @@ async def get_diary_feelings(request: Request):
 
         await new_feeling.get_diary_feeling()
         feelings = new_feeling.feeling
+        if feelings is None:
+            return Response(status_code=400, content="감정을 분석할 수 없습니다.")
         print(feelings)
 
         async with conn.cursor() as cursor:
@@ -335,8 +338,6 @@ async def get_diary_summary(request: Request):
             await cursor.execute(query, (member_id, date.year if date else None, date.month if date else None))
             result = await cursor.fetchall()
             feelings = [row['feeling'] for row in result]
-
-        print(feelings)
 
         feeling_count = defaultdict(int)
         for feeling in feelings:
