@@ -473,9 +473,9 @@ async def get_youtube_playlist(request: Request):
             "message": "토큰이 없습니다."
         }
 
-    feeling = feelings['month feeling 1']
+    feeling = feelings.get('month feeling 1', None)
     if feeling is None:
-        feeling = feelings['month feeling 2']
+        feeling = feelings.get('month feeling 2', None)
 
     new_playlist = diary.YoutubePlaylist(
         content = feeling
