@@ -394,15 +394,13 @@ async def get_youtube_playlist(request: Request):
 
     data = await request.json()
     member_id = request.headers.get('Authorization')
-    feelings = data.get('feelings', None)
-    print(feelings)
 
     if member_id is None:
         return Response(status_code=401, content="토큰이 없습니다.")
 
-    feeling = feelings.get('month feeling 1', None)
+    feeling = data.get('month feeling 1', None)
     if feeling is None:
-        feeling = feelings.get('month feeling 2', None)
+        feeling = data.get('month feeling 2', None)
 
     new_playlist = diary.YoutubePlaylist(
         content=feeling
