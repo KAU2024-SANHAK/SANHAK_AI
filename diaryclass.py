@@ -174,7 +174,7 @@ class YoutubePlaylist():
 
         for search_result in search_response.get("items", []):
             print(search_result)
-            if search_result["id"]["kind"] == "youtube#playlist":
+            if search_result["id"]["kind"] == "youtube#video":
                 self.playlist = f"https://www.youtube.com/watch?v={search_result['id']['videoId']}"
                 self.title = search_result["snippet"]["title"]
                 self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
