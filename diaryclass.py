@@ -160,9 +160,19 @@ class YoutubePlaylist():
         self.title = None
         self.thumbnail = None
 
+    # 영어 감정을 한글로 변경하는 함수
+    class Feeling(Enum.Enum):
+        HAPPY = "기쁨"
+        SAD = "슬픔"
+        ANGRY = "분노"
+        WORRIED = "걱정"
+        SURPRISED = "놀람"
+        RELAX = "평온"
+
     async def get_youtube_playlist(self):
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
-        query = "%s, %s" % (self.content, channel)
+        feeling = self.Feeling[self.content].value
+        query = "%s, %s" % (feeling, channel)
         print(query)
         print(build)
         search_response = self.youtube_build.search().list(
