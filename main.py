@@ -395,6 +395,7 @@ async def get_youtube_playlist(request: Request):
     data = await request.json()
     member_id = request.headers.get('Authorization')
     feelings = data.get('feelings', {})
+    print(feelings)
 
     if member_id is None:
         return Response(status_code=401, content="토큰이 없습니다.")
