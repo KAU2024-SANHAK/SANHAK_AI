@@ -179,12 +179,6 @@ async def get_diary_feelings(request: Request):
             "message": "토큰이 없습니다."
         }
 
-    if dairy_id is None:
-        return {
-            "status": 400,
-            "message": "일기 ID가 없습니다."
-        }
-
     try:
         async with conn.cursor() as cursor:
             query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
