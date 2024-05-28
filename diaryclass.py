@@ -163,6 +163,8 @@ class YoutubePlaylist():
     async def get_youtube_playlist(self):
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
         query = "%s, %s" % (self.content, channel)
+        print(query)
+        print(build)
         search_response = self.youtube_build.search().list(
             q=query,
             part="snippet",
