@@ -198,8 +198,6 @@ async def get_diary_feelings(request: Request):
 
         await new_feeling.get_diary_feeling()
         feelings = new_feeling.feeling
-        if feelings is None:
-            raise HTTPException(status_code=400, detail="감정 분석에 실패했습니다.")
         print(feelings)
 
         async with conn.cursor() as cursor:
@@ -471,9 +469,8 @@ async def get_youtube_playlist(request: Request):
         feeling = feelings.get('month feeling 2', None)
 
     new_playlist = diary.YoutubePlaylist(
-        content = feeling
+        content=feeling
     )
-
 
     await new_playlist.get_youtube_playlist()
 
