@@ -175,6 +175,7 @@ class YoutubePlaylist():
                 self.playlist = f"https://www.youtube.com/watch?v={search_result['id']['videoId']}"
                 self.title = search_result["snippet"]["title"]
                 self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
+                print(self.playlist, self.title, self.thumbnail)
                 break
         return self.playlist, self.title, self.thumbnail
 
