@@ -65,18 +65,12 @@ async def connect_mysql():
 async def get_api_diary_create(request: Request):
     conn = await connect_mysql()
     if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
     data = await request.json()
     member_id = request.headers.get('Authorization')
 
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "헤더에 memberId가 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     new_diary = diary.DiaryCompletion(
         member_id=member_id,
@@ -137,12 +131,7 @@ async def get_api_diary_create(request: Request):
     except Exception as e:
         error_message = str(e)
         traceback_message = traceback.format_exc()
-        return {
-            "status": 500,
-            "message": "요청이 실패했습니다.",
-            "error": error_message,
-            "traceback": traceback_message
-        }
+        return Response(status_code=500, content="요청이 실패했습니다.")
 
     finally:
         conn.close()
@@ -165,20 +154,14 @@ async def get_api_diary_create(request: Request):
 async def get_diary_feelings(request: Request):
     conn = await connect_mysql()
     if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
     data = await request.json()
     member_id = request.headers.get('Authorization')
     dairy_id = data.get('diaryId')
 
     print(member_id, dairy_id)
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "토큰이 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     try:
         async with conn.cursor() as cursor:
@@ -211,12 +194,7 @@ async def get_diary_feelings(request: Request):
     except Exception as e:
         error_message = str(e)
         traceback_message = traceback.format_exc()
-        return {
-            "status": 500,
-            "message": "요청이 실패했습니다.",
-            "error": error_message,
-            "traceback": traceback_message
-        }
+        return Response(status_code=500, content="요청이 실패했습니다.")
     finally:
         conn.close()
 
@@ -234,25 +212,16 @@ async def get_diary_feelings(request: Request):
 async def get_diary_advice(request: Request):
     conn = await connect_mysql()
     if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
     data = await request.json()
     member_id = request.headers.get('Authorization')
     dairy_id = data.get('diaryId')
 
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "토큰이 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     if dairy_id is None:
-        return {
-            "status": 400,
-            "message": "일기 ID가 없습니다."
-        }
+        return Response(status_code=400, content="일기 ID가 없습니다.")
 
     try:
         async with conn.cursor() as cursor:
@@ -290,12 +259,7 @@ async def get_diary_advice(request: Request):
     except Exception as e:
         error_message = str(e)
         traceback_message = traceback.format_exc()
-        return {
-            "status": 500,
-            "message": "요청이 실패했습니다.",
-            "error": error_message,
-            "traceback": traceback_message
-        }
+        return Response(status_code=500, content="요청이 실패했습니다.")
 
     finally:
         conn.close()
@@ -318,18 +282,13 @@ async def get_diary_advice(request: Request):
 async def get_diary_summary(request: Request):
     conn = await connect_mysql()
     if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
+
     member_id = request.headers.get('Authorization')
     date = datetime.datetime.now()
 
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "토큰이 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     try:
         async with conn.cursor() as cursor:
@@ -358,12 +317,7 @@ async def get_diary_summary(request: Request):
     except Exception as e:
         error_message = str(e)
         traceback_message = traceback.format_exc()
-        return {
-            "status": 500,
-            "message": "요청이 실패했습니다.",
-            "error": error_message,
-            "traceback": traceback_message
-        }
+        return Response(status_code=500, content="요청이 실패했습니다.")
 
     finally:
         conn.close()
@@ -382,25 +336,16 @@ async def get_diary_summary(request: Request):
 async def get_diary_image(request: Request):
     conn = await connect_mysql()
     if conn is None:
-        return {
-            "status": 500,
-            "message": "MySQL 연결에 실패했습니다."
-        }
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
     member_id = request.headers.get('Authorization')
     data = await request.json()
     dairy_id = data.get('diaryId')
 
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "토큰이 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     if dairy_id is None:
-        return {
-            "status": 400,
-            "message": "일기 ID가 없습니다."
-        }
+        return Response(status_code=400, content="일기 ID가 없습니다.")
 
     try:
         async with conn.cursor() as cursor:
@@ -429,12 +374,7 @@ async def get_diary_image(request: Request):
     except Exception as e:
         error_message = str(e)
         traceback_message = traceback.format_exc()
-        return {
-            "status": 500,
-            "message": "요청이 실패했습니다.",
-            "error": error_message,
-            "traceback": traceback_message
-        }
+        return Response(status_code=500, content="요청이 실패했습니다.")
 
     finally:
         conn.close()
@@ -456,14 +396,8 @@ async def get_youtube_playlist(request: Request):
     member_id = request.headers.get('Authorization')
     feelings = data.get('feelings', {})
 
-
-
-
     if member_id is None:
-        return {
-            "status": 401,
-            "message": "토큰이 없습니다."
-        }
+        return Response(status_code=401, content="토큰이 없습니다.")
 
     feeling = feelings.get('month feeling 1', None)
     if feeling is None:
