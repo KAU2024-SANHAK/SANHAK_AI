@@ -207,8 +207,9 @@ class WeatherPlaylist(YoutubePlaylist):
         self.current_weather = self.weather_json["weather"][0]["description"]
 
     async def get_weather_playlist(self):
-        weather = self.current_weather
         print(self.weather_json)
+        weather = self.current_weather
+
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
         query = "%s, %s" % (weather, channel)
         search_response = self.youtube_build.search().list(
