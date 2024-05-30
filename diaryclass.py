@@ -210,6 +210,8 @@ class WeatherPlaylist(YoutubePlaylist):
 
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
         query = "%s, %s" % (weather, channel)
+        print(query)
+        print(self.youtube_build)
         search_response = self.youtube_build.search().list(
             q=query,
             part="snippet",
