@@ -437,6 +437,7 @@ async def get_weather_playlist(request: Request):
     playlist_url = new_playlist.playlist
     title = new_playlist.title
     thumbnail = new_playlist.thumbnail
+    weather = new_playlist.current_weather
 
     return {
         "status": 200,
@@ -445,7 +446,7 @@ async def get_weather_playlist(request: Request):
             "title": title,
             "playlist_url": playlist_url,
             "thumbnail": thumbnail,
-            "weather": None
+            "weather": weather
         }
     }
 
