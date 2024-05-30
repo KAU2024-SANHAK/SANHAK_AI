@@ -200,7 +200,7 @@ class WeatherPlaylist(YoutubePlaylist):
         self.api_key = os.environ['WEATHER_API_KEY']
         self.lang = "kr"
         self.api = f"""https://api.openweathermap.org/data/
-        2.5/weather?q={self.city}&callback=test&appid={self.api_key}
+        2.5/weather?q={self.city}&appid={self.api_key}
         &lang={self.lang}&units=metric"""
         self.weather = requests.get(self.api)
         self.weather_json = json.loads(self.weather.text)
@@ -208,6 +208,7 @@ class WeatherPlaylist(YoutubePlaylist):
 
     async def get_weather_playlist(self):
         weather = self.current_weather
+        print(self.weather_json)
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
         query = "%s, %s" % (weather, channel)
         search_response = self.youtube_build.search().list(
