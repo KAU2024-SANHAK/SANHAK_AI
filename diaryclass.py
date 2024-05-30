@@ -196,9 +196,15 @@ class YoutubePlaylist():
 class WeatherPlaylist(YoutubePlaylist):
     def __init__(self):
         super().__init__(None)
-        self.weather = requests.get(os.environ['WEATHER_API_KEY'])
+        self.city="Seoul"
+        self.api_key = os.environ['WEATHER_API_KEY']
+        self.lang = "kr"
+        self.api = f"""https://api.openweathermap.org/data/
+        2.5/weather?q={self.city}&callback=test&appid={self.api_key}
+        &lang={self.lang}&units=metric"""
+        self.weather = requests.get(self.api)
         self.weather_json = json.loads(self.weather.text)
-        self.current_weather = self.weather_json['current']['condition']['text']
+        self.current_weather = self.weather_json["weather"][0]["description"]
 
     async def get_weather_playlist(self):
         weather = self.current_weather
