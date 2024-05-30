@@ -444,7 +444,8 @@ async def get_weather_playlist(request: Request):
         "data": {
             "title": title,
             "playlist_url": playlist_url,
-            "thumbnail": thumbnail
+            "thumbnail": thumbnail,
+            "weather": new_playlist.current_weather
         }
     }
 
