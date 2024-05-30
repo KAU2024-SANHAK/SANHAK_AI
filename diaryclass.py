@@ -153,8 +153,8 @@ class DiaryImage(Diary):
 
 class YoutubePlaylist():
     def __init__(self, content):
-        self.api_key = os.environ['YOUTUBE_API_KEY']
-        self.youtube_build = build('youtube', 'v3', developerKey=self.api_key)
+        self.youtube_api_key = os.environ['YOUTUBE_API_KEY']
+        self.youtube_build = build('youtube', 'v3', developerKey=self.youtube_api_key)
         self.content = content
         self.playlist = None
         self.title = None
@@ -197,9 +197,9 @@ class WeatherPlaylist(YoutubePlaylist):
     def __init__(self):
         super().__init__(None)
         self.city="Seoul"
-        self.api_key = os.environ['WEATHER_API_KEY']
+        self.weather_api_key = os.environ['WEATHER_API_KEY']
         self.lang = "kr"
-        self.api = f"""https://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.api_key}&lang={self.lang}&units=metric"""
+        self.api = f"""https://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.weather_api_key}&lang={self.lang}&units=metric"""
         self.weather = requests.get(self.api)
         self.weather_json = json.loads(self.weather.text)
         self.current_weather = self.weather_json["weather"][0]["description"]
