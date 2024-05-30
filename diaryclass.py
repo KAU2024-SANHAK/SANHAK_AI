@@ -209,7 +209,7 @@ class WeatherPlaylist(YoutubePlaylist):
         weather = self.current_weather
 
         channel = "때껄룩ᴛᴀᴋᴇ ᴀ ʟᴏᴏᴋ"
-        query = "%s, %s" % (weather, channel)
+        query = "%s playlist" % weather
         print(query)
         print(self.youtube_build)
         search_response = self.youtube_build.search().list(
