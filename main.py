@@ -434,7 +434,7 @@ async def get_weather_playlist(request: Request):
     title = new_playlist.title
     thumbnail = new_playlist.thumbnail
     weather = new_playlist.current_weather
-    icon = new_playlist.icon
+    icon = "%s.png" % new_playlist.icon
 
     return {
         "status": 200,
