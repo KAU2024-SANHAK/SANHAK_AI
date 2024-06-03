@@ -203,6 +203,7 @@ class WeatherPlaylist(YoutubePlaylist):
         self.weather = requests.get(self.api)
         self.weather_json = json.loads(self.weather.text)
         self.current_weather = self.weather_json["weather"][0]["description"]
+        self.icon = self.weather_json["weather"][0]["icon"]
 
     async def get_weather_playlist(self):
         print(self.weather_json)
