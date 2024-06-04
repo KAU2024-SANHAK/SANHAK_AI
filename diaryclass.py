@@ -53,8 +53,7 @@ class DiaryCompletion(Diary):
                 {"role": "system", "content": 'you are a diary writer'},
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.7,
-            max_tokens=300
+            temperature=0.7
         )
 
         content = completion.choices[0].message.content
