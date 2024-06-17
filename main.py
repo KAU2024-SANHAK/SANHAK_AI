@@ -402,11 +402,11 @@ async def get_youtube_playlist(request: Request):
         content=feeling
     )
 
-    await new_playlist.get_youtube_playlist()
+    # await new_playlist.get_youtube_playlist()
 
-    playlist_url = new_playlist.playlist
-    title = new_playlist.title
-    thumbnail = new_playlist.thumbnail
+    playlist_url = 'https://youtu.be/Ddk3_Oh0dw8?si=p4o8-VDrl3Em954H' # new_playlist.playlist
+    title = '𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 빡쳐서 주체가 안 되면 일단 들어와 봐' #new_playlist.title
+    thumbnail = 'https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/8ec2e675b4d9d0ed37df7b7553b234a47295f5002aa0053b9a8574ec5e637fa7-image-12261246255767363184.png' #new_playlist.thumbnail
 
     return {
         "status": 200,
@@ -428,11 +428,11 @@ async def get_weather_playlist(request: Request):
 
     new_playlist = diary.WeatherPlaylist()
 
-    await new_playlist.get_weather_playlist()
+    # await new_playlist.get_weather_playlist()
 
-    playlist_url = new_playlist.playlist
-    title = new_playlist.title
-    thumbnail = new_playlist.thumbnail
+    playlist_url = 'https://youtu.be/xgleSFQ3cLo?si=UhY8u537Aq1ufPaS' #new_playlist.playlist
+    title = '𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 벌써 여름이야, 시원하고 청량한 음악 담아왔어' #new_playlist.title
+    thumbnail = 'https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/09068c885fdd5ceeb51b8b4f0c23c2a127c5c1d7f69b17f054766823c7f98823-image-3126367375241923998.png' #new_playlist.thumbnail
     weather = new_playlist.current_weather
     icon = "https://openweathermap.org/img/wn/%s@2x.png" % new_playlist.icon
 
