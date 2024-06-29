@@ -48,7 +48,7 @@ class DiaryCompletion(Diary):
 
         client = self.client
         completion = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
                 {"role": "user", "content": prompt},
@@ -92,7 +92,7 @@ class DiaryFeeling(Diary):
 
         client = self.client
         completion = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
                 {"role": "user", "content": prompt},
@@ -116,7 +116,7 @@ class DiaryAdvice(Diary):
 
         client = self.client
         completion = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": 'you are a diary writer'},
                 {"role": "user", "content": prompt},
