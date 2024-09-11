@@ -455,6 +455,59 @@ async def get_weather_playlist(request: Request):
     }
 
 
+
+@app.get('/api/ai/diary/chuseok/keyword')
+async def get_chuseok_keyword(request: Request):
+
+    conn = await connect_mysql()
+    if conn is None:
+        return Response(status_code=500, content="MySQL 연결에 실패했습니다.")
+
+    member_id = request.headers.get('Authorization')
+
+    if member_id is None:
+        return Response(status_code=401, content="토큰이 없습니다.")
+
+    data = await request.json()
+    diary_id = data.get('diaryId')
+
+    try:
+        async with conn.cursor() as cursor:
+            query = "SELECT content FROM diary WHERE member_id = %s AND diary_id = %s"
+            await cursor.execute(query, (member_id, diary_id))
+            content = await cursor.fetchone()
+            content = content['content']
+
+        new_keyword = diary.ChuseokKeyword(
+            member_id=member_id,
+            created_at=None,
+            updated_at=None,
+            written_at=None,
+            content=content
+        )
+
+        await new_keyword.get_chuseok_keyword()
+
+        keyword = new_keyword.keyword
+        illustration = new_keyword.illustration
+
+    except Exception as e:
+        error_message = str(e)
+        traceback_message = traceback.format_exc()
+        return Response(status_code=500, content="요청이 실패했습니다.")
+
+    finally:
+        conn.close()
+
+    return {
+        "status": 200,
+        "message": "요청이 성공했습니다.",
+        "data": {
+            "keyword": keyword,
+            "illustration": illustration
+        }
+    }
+
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8080)
     
