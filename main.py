@@ -456,7 +456,7 @@ async def get_weather_playlist(request: Request):
 
 
 
-@app.get('/api/ai/diary/chuseok/keyword')
+@app.post('/api/ai/diary/chuseok/keyword')
 async def get_chuseok_keyword(request: Request):
 
     conn = await connect_mysql()
