@@ -8,6 +8,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 import uvicorn
 import tracemalloc
+import random
 tracemalloc.start()
 
 
@@ -404,12 +405,36 @@ async def get_youtube_playlist(request: Request):
 
     # await new_playlist.get_youtube_playlist()
 
-    playlist_url = 'https://youtu.be/Ddk3_Oh0dw8?si=p4o8-VDrl3Em954H'
-    # new_playlist.playlist
-    title = '𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 빡쳐서 주체가 안 되면 일단 들어와 봐'
-    # new_playlist.title
-    thumbnail = 'https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/8ec2e675b4d9d0ed37df7b7553b234a47295f5002aa0053b9a8574ec5e637fa7-image-12261246255767363184.png'
-    # new_playlist.thumbnail
+    random_playlist = [
+        {
+            "title": "𝗣𝗔𝗬𝗟𝗜𝗦𝗧 가을밤에 든 생각 | 잔나비, 카더가든, 샘김, 김필 •••",
+            "playlist_url": "https://youtu.be/0eyvWdgx_gk?si=F5t7bDY5oWfKcYlw",
+            "thumbnail": "https://img.youtube.com/vi/0eyvWdgx_gk/sddefault.jpg"
+        },
+        {
+            "title": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 어린 시절 차 안에서 따라 불렀던 추억의 8090년생 감성 히트곡 | 추석 귀성길 졸음 운전 방지 플레이리스트 feat.삼성화재",
+            "playlist_url": "https://youtu.be/OqYPJIw9NHc?si=1LsYfTMYFSs6dLEF",
+            "thumbnail": "https://img.youtube.com/vi/OqYPJIw9NHc/sddefault.jpg"
+        },
+        {
+            "title": "[Playlist] 추석 귀성길 기분 UP 하고 싶을 때 | 고속도로 뚫리는 호불호 없는 세대대통합 추천 플리 | 데이식스 윤하 버즈 아이유 악뮤 태연",
+            "playlist_url": "https://youtu.be/KV0UjLw9hd0?si=0aRwRMlHB65YjLel",
+            "thumbnail": "https://img.youtube.com/vi/KV0UjLw9hd0/sddefault.jpg"
+        },
+        {
+            "title": "[playlist] 우리가 사랑한 계절, 가을",
+            "playlist_url": "https://youtu.be/5US45TlnZKI?si=PjYF2sQJEhddXEkY",
+            "thumbnail": "https://img.youtube.com/vi/5US45TlnZKI/sddefault.jpg"
+        }
+
+    ]
+
+    # random_playlist에서 random 함수를 이용해 랜덤으로 하나의 플레이리스트를 선택합니다.
+
+    playlist = random.choice(random_playlist)
+    title = playlist['title']
+    playlist_url = playlist['playlist_url']
+    thumbnail = playlist['thumbnail']
 
     return {
         "status": 200,
@@ -433,12 +458,37 @@ async def get_weather_playlist(request: Request):
 
     # await new_playlist.get_weather_playlist()
 
-    playlist_url = 'https://youtu.be/xgleSFQ3cLo?si=UhY8u537Aq1ufPaS'
-    # new_playlist.playlist
-    title = '𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 벌써 여름이야, 시원하고 청량한 음악 담아왔어'
-    # new_playlist.title
-    thumbnail = 'https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/09068c885fdd5ceeb51b8b4f0c23c2a127c5c1d7f69b17f054766823c7f98823-image-3126367375241923998.png'
-    # new_playlist.thumbnail
+    random_playlist = [
+        {
+            "title": "𝗣𝗔𝗬𝗟𝗜𝗦𝗧 가을밤에 든 생각 | 잔나비, 카더가든, 샘김, 김필 •••",
+            "playlist_url": "https://youtu.be/0eyvWdgx_gk?si=F5t7bDY5oWfKcYlw",
+            "thumbnail": "https://img.youtube.com/vi/0eyvWdgx_gk/sddefault.jpg"
+        },
+        {
+            "title": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 어린 시절 차 안에서 따라 불렀던 추억의 8090년생 감성 히트곡 | 추석 귀성길 졸음 운전 방지 플레이리스트 feat.삼성화재",
+            "playlist_url": "https://youtu.be/OqYPJIw9NHc?si=1LsYfTMYFSs6dLEF",
+            "thumbnail": "https://img.youtube.com/vi/OqYPJIw9NHc/sddefault.jpg"
+        },
+        {
+            "title": "[Playlist] 추석 귀성길 기분 UP 하고 싶을 때 | 고속도로 뚫리는 호불호 없는 세대대통합 추천 플리 | 데이식스 윤하 버즈 아이유 악뮤 태연",
+            "playlist_url": "https://youtu.be/KV0UjLw9hd0?si=0aRwRMlHB65YjLel",
+            "thumbnail": "https://img.youtube.com/vi/KV0UjLw9hd0/sddefault.jpg"
+        },
+        {
+            "title": "[playlist] 우리가 사랑한 계절, 가을",
+            "playlist_url": "https://youtu.be/5US45TlnZKI?si=PjYF2sQJEhddXEkY",
+            "thumbnail": "https://img.youtube.com/vi/5US45TlnZKI/sddefault.jpg"
+        }
+
+    ]
+
+    # random_playlist에서 random 함수를 이용해 랜덤으로 하나의 플레이리스트를 선택합니다.
+
+    playlist = random.choice(random_playlist)
+    title = playlist['title']
+    playlist_url = playlist['playlist_url']
+    thumbnail = playlist['thumbnail']
+
     weather = new_playlist.current_weather
     icon = "https://openweathermap.org/img/wn/%s@2x.png" % new_playlist.icon
 
