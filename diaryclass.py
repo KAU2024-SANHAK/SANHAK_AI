@@ -227,3 +227,69 @@ class WeatherPlaylist(YoutubePlaylist):
                 self.thumbnail = search_result["snippet"]["thumbnails"]["default"]["url"]
                 break
         return self.playlist, self.title, self.thumbnail
+
+
+class ChuseokKeyword(Diary):
+    def __init__(self, member_id, created_at, updated_at, written_at, content):
+        super().__init__(member_id, created_at, updated_at, written_at)
+        self.content = content
+        self.keyword = None
+        self.illustration = None
+
+    keyword_map = {
+        "송편": "송편 베어",
+        "보름달": "보름달 베어",
+        "한복": "한복 베어",
+        "곶감": "곶감 베어",
+        "집콕": "뒹굴 베어",
+        "여행": "트레블 베어",
+        "가족": "패밀리 베어"
+    }
+
+    illustration_map = {
+        "송편 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                 "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%89%E1%85%A9%E1%86%BC"
+                 "%E1%84%91%E1%85%A7%E1%86%AB%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "보름달 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                  "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%87%E1%85%A9%E1%84%85"
+                  "%E1%85%B3%E1%86%B7%E1%84%83%E1%85%A1%E1%86%AF%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "한복 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                 "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%92%E1%85%A1%E1%86%AB"
+                 "%E1%84%87%E1%85%A9%E1%86%A8%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "곶감 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                 "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%80%E1%85%A9%E1%86%BD"
+                 "%E1%84%80%E1%85%A1%E1%86%B7%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "뒹굴 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                 "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%8C%E1%85%B5%E1%86%B8"
+                 "%E1%84%8F%E1%85%A9%E1%86%A8%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "트레블 베어": "hhttps://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                  "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%90%E1%85%B3%E1%84%85"
+                  "%E1%85%A6%E1%84%87%E1%85%B3%E1%86%AF%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png",
+        "패밀리 베어": "https://kkoolbee-storage.s3.ap-northeast-2.amazonaws.com/%EC%B6%94%EC%84%9D/%E1%84%8E%E1%85%AE%E1"
+                  "%84%89%E1%85%A5%E1%86%A8+%E1%84%91%E1%85%A9%E1%86%AF%E1%84%83%E1%85%A5/%E1%84%91%E1%85%A2%E1%84%86"
+                  "%E1%85%B5%E1%86%AF%E1%84%85%E1%85%B5%E1%84%87%E1%85%A6%E1%84%8B%E1%85%A5.png"
+    }
+
+
+    async def change_keyword(self, keyword):
+        return self.keyword_map.get(keyword, None)
+
+    async def get_illustration(self, keyword):
+        return self.illustration_map.get(keyword, None)
+
+    async def get_chuseok_keyword(self):
+        prompt = (Prompt.chuseok_keyword_prompt %
+                  self.content)
+
+        client = self.client
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": 'you are a diary writer'},
+                {"role": "user", "content": prompt},
+            ]
+        )
+
+        self.keyword = completion.choices[0].message.content
+        self.keyword = await self.change_keyword(self.keyword)
+        self.illustration = await self.get_illustration(self.keyword)
